@@ -1,9 +1,10 @@
 # 🛍️ ShopSey — Elegant E-Commerce Mobile App for Sports and Lifestyle Gear
 
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Android Studio](https://img.shields.io/aur/license/android-studio?style=for-the-badge&logo=android&logoColor=%233DDC84&logoSize=auto&label=Android&labelColor=FFFFFF&color=000000&cacheSeconds=3600&link=https%3A%2F%2Fdeveloper.android.com%2Fstudio%3Fhl%3Did
-)
-![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-4285F4?logo=jetpackcompose&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Architecture](https://img.shields.io/badge/Architecture-MVVM-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Mock_Data_(UI_Only)-orange.svg)
 
@@ -44,14 +45,10 @@
 Aplikasi ini dibangun murni secara *Native* untuk Android dengan spesifikasi berikut:
 
 *   **Bahasa Pemrograman:** [Kotlin](https://kotlinlang.org/)
-*   **UI Toolkit:** XML Layouts / Material Design 3
+*   **UI Toolkit:** [Jetpack Compose](https://developer.android.com/jetpack/compose) & Material Design 3
 *   **Arsitektur:** **MVVM (Model-View-ViewModel)** untuk pemisahan logika dan tampilan.
-*   **Asynchronous Programming:** Kotlin Coroutines (digunakan untuk menyimulasikan *delay* jaringan/loading data).
-*   **Data Handling:** 
-    *   `Moshi` / `Gson` (untuk mem-*parsing* file `products.json` dari folder assets).
-    *   `LiveData` / `StateFlow` (untuk mengamati perubahan data UI).
-*   **Image Loading:** [Glide](https://github.com/bumptech/glide) / [Coil](https://coil-kt.github.io/coil/) (untuk merender *mock image URL* dengan cepat).
-*   **Navigation:** Android Jetpack Navigation Component.
+*   **Animasi & Auto-Scroll:** Kotlin Coroutines & JavaScript/Delay timing mechanism untuk loop infinite scrolling dan progress-bar indicator.
+*   **Navigation:** Android Jetpack Navigation Compose.
 
 ---
 
@@ -111,4 +108,3 @@ Untuk saat ini aplikasi menggunakan Mock Data, namun ke depannya arsitektur ini 
 * Mahasiswa Jurusan SIJA di SMK Negeri 2 Yogyakarta
 * GitHub: [@r4rdi](https://github.com/r4rdi/ShopSey-App.git)
 * LinkedIn: [Rafi Ardiansyah](https://www.linkedin.com/in/rafi-ardiansyah-3935b03b2?utm_source=share_via&utm_content=profile&utm_medium=member_android)
->>>>>>> 15e8311 (feat: implement authentication flow, welcome screen, and home page with section scrolling and 3D floating navbar)
