@@ -1,0 +1,66 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="260dp"
+    android:height="80dp"
+    android:viewportWidth="260"
+    android:viewportHeight="80">
+
+    <!-- Orange Tag Icon -->
+    <!-- Tag loop -->
+    <path
+        android:strokeColor="#FF5722"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 44,14 C 41,9 35,9 33,14 C 31,19 36,25 42,30" />
+
+    <!-- Tag body -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5722"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 42,27 L 53,38 C 55,40 55,43 53,45 L 36,62 C 34,64 31,64 29,62 L 16,49 C 14,47 14,44 16,42 L 33,25 C 35,23 38,23 40,25 Z" />
+
+    <!-- Tag hole dot -->
+    <path
+        android:fillColor="#FF5722"
+        android:pathData="M 39,32 A 3,3 0 1,1 33,32 A 3,3 0 1,1 39,32" />
+
+    <!-- "Shopsey" Wordmark (Vector Paths) -->
+    <!-- 'S' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 78,35 C 76,32 73,31 69,31 C 65,31 62,33 62,36 C 62,43 80,40 80,52 C 80,59 74,63 67,63 C 60,63 56,59 55,54 L 62,52 C 63,55 65,57 68,57 C 71,57 73,55 73,52 C 73,46 55,47 55,36 C 55,29 60,25 68,25 C 75,25 79,29 80,33 Z" />
+
+    <!-- 'h' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 85,18 L 92,18 L 92,34 C 95,31 98,30 102,30 C 109,30 113,34 113,42 L 113,62 L 106,62 L 106,44 C 106,39 104,36 99,36 C 95,36 92,39 92,44 L 92,62 L 85,62 Z" />
+
+    <!-- 'o' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 129,30 C 138,30 144,37 144,46 C 144,56 138,63 129,63 C 120,63 114,56 114,46 C 114,37 120,30 129,30 Z M 129,36 C 124,36 121,41 121,46 C 121,52 124,57 129,57 C 134,57 137,52 137,46 C 137,41 134,36 129,36 Z" />
+
+    <!-- 'p' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 148,31 L 155,31 L 155,35 C 158,32 161,30 166,30 C 174,30 179,37 179,46 C 179,56 173,63 165,63 C 161,63 158,61 155,58 L 155,73 L 148,73 Z M 163,36 C 159,36 155,40 155,46 C 155,52 159,57 163,57 C 168,57 172,52 172,46 C 172,41 168,36 163,36 Z" />
+
+    <!-- 's' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 194,40 C 192,37 189,36 186,36 C 183,36 181,37 181,39 C 181,44 195,42 195,52 C 195,58 190,63 184,63 C 178,63 174,60 173,55 L 179,53 C 180,56 182,57 184,57 C 187,57 189,56 189,53 C 189,48 175,49 175,39 C 175,34 179,30 185,30 C 191,30 195,33 196,38 Z" />
+
+    <!-- 'e' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 213,30 C 222,30 228,36 228,46 L 206,46 C 206,52 210,57 215,57 C 219,57 222,55 224,52 L 229,55 C 226,60 221,63 214,63 C 205,63 199,56 199,46 C 199,37 205,30 213,30 Z M 213,35 C 209,35 206,38 206,42 L 221,42 C 221,38 217,35 213,35 Z" />
+
+    <!-- 'y' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 230,31 L 238,31 L 243,49 L 249,31 L 257,31 L 246,59 C 243,67 239,72 233,72 L 229,72 L 229,66 L 232,66 C 236,66 238,63 240,58 Z" />
+
+</vector>

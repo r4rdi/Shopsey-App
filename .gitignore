@@ -1,13 +1,17 @@
 # Gradle files
 .gradle/
 build/
+app/build/
 .kotlin/
 
 # Local configuration file (sdk path, etc)
 local.properties
+/local.properties
 
 # Log/OS Files
 *.log
+.DS_Store
+.offline-markdown-preview/
 
 # Android Studio generated files and folders
 captures/
@@ -20,6 +24,7 @@ output-metadata.json
 # IntelliJ
 *.iml
 .idea/
+/.idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
