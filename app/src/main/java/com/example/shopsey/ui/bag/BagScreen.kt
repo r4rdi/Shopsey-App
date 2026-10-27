@@ -3,6 +3,7 @@ package com.example.shopsey.ui.bag
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -54,7 +57,8 @@ import com.example.shopsey.R
 @Composable
 fun BagScreen(
     modifier: Modifier = Modifier,
-    onCheckoutClick: () -> Unit = {}
+    onCheckoutClick: () -> Unit = {},
+    onProductClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     var quantity by remember { mutableIntStateOf(1) }
@@ -89,7 +93,15 @@ fun BagScreen(
             // 2. KARTU PRODUK (Air Jordan 4 'Toro')
             // ----------------------------------------------------
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = ripple(bounded = true),
+                        onClick = onProductClick
+                    )
+                    .padding(4.dp),
                 verticalAlignment = Alignment.Top
             ) {
                 // Wadah Gambar Sepatu dengan background abu-abu terang

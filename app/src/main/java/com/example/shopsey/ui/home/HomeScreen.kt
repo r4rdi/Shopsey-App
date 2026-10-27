@@ -10,6 +10,8 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -45,6 +47,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -66,6 +69,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.shopsey.R
 import com.example.shopsey.ui.bag.BagScreen
+import com.example.shopsey.ui.detail.ProductDetailScreen
+import com.example.shopsey.ui.detail.ProductDetailState
 import com.example.shopsey.ui.profile.ProfileScreen
 import com.example.shopsey.ui.search.SearchScreen
 import com.example.shopsey.ui.shop.ShopScreen
@@ -107,7 +112,8 @@ fun HomeScreen(
     onExploreClick: (HomeSectionData) -> Unit = {}
 ) {
     var selectedNavTab by remember { mutableIntStateOf(initialTab) }
-    val isDarkTheme = selectedNavTab == 0
+    var viewingProductDetail by remember { mutableStateOf<ProductDetailState?>(null) }
+    val isDarkTheme = selectedNavTab == 0 && viewingProductDetail == null
 
     // Mengontrol warna icon status bar (putih saat tema gelap, hitam saat tema terang)
     val view = LocalView.current
@@ -133,26 +139,75 @@ fun HomeScreen(
             .fillMaxSize()
             .background(animatedBgColor)
     ) {
-        // Transisi halus (Smooth Crossfade) saat berpindah antar halaman/tab
         AnimatedContent(
-            targetState = selectedNavTab,
+            targetState = viewingProductDetail,
             transitionSpec = {
-                fadeIn(animationSpec = tween(350)) togetherWith fadeOut(animationSpec = tween(350))
+                (fadeIn(animationSpec = tween(300)) + slideInVertically(animationSpec = tween(300)) { it / 8 }) togetherWith
+                        (fadeOut(animationSpec = tween(250)) + slideOutVertically(animationSpec = tween(250)) { it / 8 })
             },
-            label = "tabContentTransition",
+            label = "detailContentTransition",
             modifier = Modifier.fillMaxSize()
-        ) { tab ->
-            when (tab) {
-                0 -> HomeScreenContent(
-                    isActive = selectedNavTab == 0,
-                    onExploreClick = onExploreClick
+        ) { detailState ->
+            if (detailState != null) {
+                ProductDetailScreen(
+                    product = detailState,
+                    onBack = { viewingProductDetail = null },
+                    onAddToBagClick = { _ -> },
+                    onRecommendationClick = { rec ->
+                        viewingProductDetail = ProductDetailState(
+                            id = rec.id,
+                            title = rec.title,
+                            category = rec.category,
+                            price = rec.price,
+                            images = listOf(rec.imageRes, R.drawable.detail1, R.drawable.detail2, R.drawable.detail3)
+                        )
+                    }
                 )
-                1 -> ShopScreen(
-                    onProductClick = { /* Detail produk */ }
-                )
-                2 -> SearchScreen()
-                3 -> BagScreen()
-                4 -> ProfileScreen()
+            } else {
+                // Transisi halus (Smooth Crossfade) saat berpindah antar halaman/tab
+                AnimatedContent(
+                    targetState = selectedNavTab,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(350)) togetherWith fadeOut(animationSpec = tween(350))
+                    },
+                    label = "tabContentTransition",
+                    modifier = Modifier.fillMaxSize()
+                ) { tab ->
+                    when (tab) {
+                        0 -> HomeScreenContent(
+                            isActive = selectedNavTab == 0,
+                            onExploreClick = { section ->
+                                viewingProductDetail = ProductDetailState(
+                                    title = section.title,
+                                    category = section.brandName,
+                                    price = "Rp3.329.000",
+                                    images = listOf(section.bgRes, R.drawable.detail1, R.drawable.detail2)
+                                )
+                            }
+                        )
+                        1 -> ShopScreen(
+                            onProductClick = {
+                                viewingProductDetail = ProductDetailState()
+                            }
+                        )
+                        2 -> SearchScreen(
+                            onProductClick = { product ->
+                                viewingProductDetail = ProductDetailState(
+                                    title = product.name,
+                                    category = product.category,
+                                    price = product.price,
+                                    images = listOf(product.imageRes, R.drawable.detail1, R.drawable.detail2)
+                                )
+                            }
+                        )
+                        3 -> BagScreen(
+                            onProductClick = {
+                                viewingProductDetail = ProductDetailState()
+                            }
+                        )
+                        4 -> ProfileScreen()
+                    }
+                }
             }
         }
 
@@ -161,7 +216,10 @@ fun HomeScreen(
         FloatingNavigationBar(
             selectedTab = selectedNavTab,
             isDarkTheme = isDarkTheme,
-            onTabSelected = { selectedNavTab = it },
+            onTabSelected = {
+                viewingProductDetail = null
+                selectedNavTab = it
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
