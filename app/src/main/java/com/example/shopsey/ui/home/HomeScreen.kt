@@ -1,11 +1,16 @@
 package com.example.shopsey.ui.home
 
+import android.app.Activity
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationEndReason
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,7 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.VerticalPager
@@ -36,17 +40,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,11 +53,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.shopsey.R
+import com.example.shopsey.ui.bag.BagScreen
+import com.example.shopsey.ui.profile.ProfileScreen
+import com.example.shopsey.ui.search.SearchScreen
+import com.example.shopsey.ui.shop.ShopScreen
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /**
  * Model data untuk setiap Section pada Home Page.
@@ -73,25 +84,98 @@ data class HomeSectionData(
 )
 
 /**
- * Halaman Utama (Home Page) ShopSey.
+ * Halaman Utama (Main Screen) ShopSey.
  *
  * Fitur Utama:
- * 1. Section Scrolling (VerticalPager): Halaman secara otomatis berpindah dan mengunci
- *    (snap) secara halus ke section penuh berikutnya saat digulirkan.
- * 2. 6 Kontainer Section Produk:
- *    - 1. Produk Nike (homebg1.png & icon_nike.png)
- *    - 2. Produk Sheath Kobe (homebg2.png & icon_sheathkobe.png)
- *    - 3. Produk Adidas (homebg3.png & icon_adidas.png)
- *    - 4. Produk Puma (homebg4.png & icon_puma.png)
- *    - 5. Produk Under Armour (homebg5.png & icon_underarmour.png)
- *    - 6. Produk Jordan (homebg6.png & icon_jordan.png)
- * 3. Floating Navbar: Fixed position di bagian bawah (stay in place), overflow no scrolling,
- *    berisi 5 item: Home, Shop, Search, Bag, dan Profile.
+ * 1. Manajemen 5 Tab Navigasi: Home (0), Shop (1), Search (2), Bag (3), Profile (4).
+ * 2. Transisi Tema Halus (Dark <-> Light):
+ *    - Home menggunakan tema gelap sinematik (Dark Mode)
+ *    - Shop, Search, Bag, Profile menggunakan tema terang elegan (Light Mode)
+ *    - Saat berganti tab, warna background, navbar 3D, icon, dan status bar bermutasi secara mulus.
+ * 3. Section Scrolling (VerticalPager) dengan Seamless Infinite Looping pada tab Home.
+ * 4. Floating Navbar: Fixed position di bagian bawah (stay in place) & overflow no scrolling.
  */
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    initialTab: Int = 0,
     onExploreClick: (HomeSectionData) -> Unit = {}
+) {
+    var selectedNavTab by remember { mutableIntStateOf(initialTab) }
+    val isDarkTheme = selectedNavTab == 0
+
+    // Mengontrol warna icon status bar (putih saat tema gelap, hitam saat tema terang)
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as? Activity)?.window ?: return@SideEffect
+            WindowInsetsControllerCompat(window, view).apply {
+                isAppearanceLightStatusBars = !isDarkTheme
+                isAppearanceLightNavigationBars = !isDarkTheme
+            }
+        }
+    }
+
+    // Animasi warna latar belakang saat transisi Dark Mode <-> Light Mode
+    val animatedBgColor by animateColorAsState(
+        targetValue = if (isDarkTheme) Color.Black else Color(0xFFF7F7F9),
+        animationSpec = tween(durationMillis = 350),
+        label = "mainBgColor"
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(animatedBgColor)
+    ) {
+        // Transisi halus (Smooth Crossfade) saat berpindah antar halaman/tab
+        AnimatedContent(
+            targetState = selectedNavTab,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(350)) togetherWith fadeOut(animationSpec = tween(350))
+            },
+            label = "tabContentTransition",
+            modifier = Modifier.fillMaxSize()
+        ) { tab ->
+            when (tab) {
+                0 -> HomeScreenContent(
+                    isActive = selectedNavTab == 0,
+                    onExploreClick = onExploreClick
+                )
+                1 -> ShopScreen(
+                    onProductClick = { /* Detail produk */ }
+                )
+                2 -> SearchScreen()
+                3 -> BagScreen()
+                4 -> ProfileScreen()
+            }
+        }
+
+        // Floating Navbar dengan position fixed (stay in place) & overflow no scrolling
+        // Memiliki efek transisi tema secara halus (Dark 3D Glass <-> Light White Elevated)
+        FloatingNavigationBar(
+            selectedTab = selectedNavTab,
+            isDarkTheme = isDarkTheme,
+            onTabSelected = { selectedNavTab = it },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(bottom = 26.dp, start = 20.dp, end = 20.dp)
+        )
+    }
+}
+
+/**
+ * Konten Khusus Halaman Home:
+ * - 6 Kontainer Section Produk (Nike, Kobe, Adidas, Puma, UA, Jordan)
+ * - Section Scrolling (VerticalPager) dengan Infinite Looping
+ * - Auto-scrolling & Timer-bar indicator
+ */
+@Composable
+fun HomeScreenContent(
+    isActive: Boolean,
+    onExploreClick: (HomeSectionData) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     // 6 Kontainer / Section sesuai spesifikasi
     val sections = remember {
@@ -148,29 +232,26 @@ fun HomeScreen(
     }
 
     // Konfigurasi Infinite Scrolling (Seamless Carousel):
-    // Menggunakan virtual page count agar pengguna maupun mekanisme auto-scroll
-    // dapat melakukan scroll ke bawah secara terus menerus (infinite loop) dari Section 6 (Jordan) kembali ke Section 1 (Nike).
     val virtualCycleCount = 20_000
     val virtualPageCount = sections.size * virtualCycleCount // 120.000 halaman
     val initialPage = (virtualPageCount / 2) - ((virtualPageCount / 2) % sections.size) // Mulai tepat di Section 1 (Nike)
 
-    // Pager state untuk Section Scrolling (mengunci ke section berikutnya dengan snap halus)
     val pagerState = rememberPagerState(
         initialPage = initialPage,
         pageCount = { virtualPageCount }
     )
-
-    // Tab navigasi aktif pada floating navbar (0 = Home)
-    var selectedNavTab by remember { mutableIntStateOf(0) }
 
     // Progress animasi untuk Scroll-Timer Indicator (0f -> 1f)
     val timerProgress = remember { Animatable(0f) }
     val autoScrollDurationMs = 4500 // Durasi delay tiap section (4.5 detik)
 
     // Efek Auto-Scrolling & Timer Bar:
-    // Menggunakan coroutine loop terisolasi yang stabil (tidak ter-cancel di tengah jalan saat melewati 50% scroll)
-    // sehingga transisi scroll berjalan penuh (Full One Page Section Scroll) tanpa macet/stuck di tengah.
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState, isActive) {
+        if (!isActive) {
+            timerProgress.snapTo(0f)
+            return@LaunchedEffect
+        }
+
         while (isActive) {
             // Tunggu hingga pager benar-benar diam (settled) dan tidak sedang digeser manual oleh pengguna
             if (pagerState.isScrollInProgress) {
@@ -183,7 +264,6 @@ fun HomeScreen(
             timerProgress.snapTo(0f)
 
             // Jalankan animasi pengisian bar timer (0f -> 1f)
-            // Sekaligus memantau apakah pengguna mulai menggeser layar secara manual
             var userInterrupted = false
             coroutineScope {
                 val timerJob = launch {
@@ -218,7 +298,6 @@ fun HomeScreen(
                     }
                 }
             } else {
-                // Pengguna menggeser layar manual, kosongkan timer bar
                 timerProgress.snapTo(0f)
             }
         }
@@ -244,7 +323,6 @@ fun HomeScreen(
         }
 
         // 2. Scroll-Timer Indicator (Batang progress penanda waktu jalan auto-scrolling)
-        // Diletakkan di ujung kanan bawah (sejajar dengan area tombol Explore)
         val currentSectionIndex = (pagerState.currentPage % sections.size + sections.size) % sections.size
         val currentDisplayNumber = (currentSectionIndex + 1).toString().padStart(2, '0')
         val totalSectionsNumber = sections.size.toString().padStart(2, '0')
@@ -284,16 +362,6 @@ fun HomeScreen(
                 )
             }
         }
-
-        // 3. Floating Navbar dengan position fixed (stay in place) & overflow no scrolling
-        FloatingNavigationBar(
-            selectedTab = selectedNavTab,
-            onTabSelected = { selectedNavTab = it },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding()
-                .padding(bottom = 26.dp, start = 20.dp, end = 20.dp)
-        )
     }
 }
 
@@ -317,7 +385,7 @@ private fun HomeSectionItem(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Lapisan Gradien Atas (Soft vignette untuk keterbacaan area status bar)
+        // Lapisan Gradien Atas (Soft vignette untuk keterbacaan status bar)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -333,7 +401,7 @@ private fun HomeSectionItem(
                 )
         )
 
-        // Lapisan Gradien Bawah Sinematik (Agar teks, icon dan tombol Explore terbaca sangat jelas)
+        // Lapisan Gradien Bawah Sinematik
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -351,15 +419,13 @@ private fun HomeSectionItem(
                 )
         )
 
-        // Konten Informasi Produk (Brand Icon, Title, Subtitle, Tombol Explore)
-        // Diberikan margin bottom yang proporsional (140dp) menyesuaikan posisi navbar yang dinaikkan
+        // Konten Informasi Produk (Brand Logo, Title, Subtitle, Tombol Explore)
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .navigationBarsPadding()
                 .padding(start = 24.dp, end = 24.dp, bottom = 140.dp)
         ) {
-            // Icon Brand Produk (Di-scale lebih besar dan proporsional untuk seluruh brand)
             Image(
                 painter = painterResource(id = section.iconRes),
                 contentDescription = "${section.brandName} Logo",
@@ -372,7 +438,6 @@ private fun HomeSectionItem(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Judul Produk (Bold & High Contrast)
             Text(
                 text = section.title,
                 color = Color.White,
@@ -383,7 +448,6 @@ private fun HomeSectionItem(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Subtitle Deskripsi
             Text(
                 text = section.subtitle,
                 color = Color.White.copy(alpha = 0.92f),
@@ -394,7 +458,6 @@ private fun HomeSectionItem(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            // Tombol Explore (Kapsul elegan transparan dengan border putih, persis referensi)
             Surface(
                 onClick = onExploreClick,
                 shape = RoundedCornerShape(50),
@@ -416,48 +479,84 @@ private fun HomeSectionItem(
 
 /**
  * Floating Navigation Bar (Fixed stay in place & overflow no scrolling).
- * Berisi 5 item:
- * 1. Home (Icon dari referensi XML pengguna)
- * 2. Shop
- * 3. Search
- * 4. Bag
- * 5. Profile
+ * Memiliki transisi tema yang halus (Smooth Animation) saat berpindah antara:
+ * - Dark Mode (Home)
+ * - Light Mode (Shop, Search, Bag, Profile)
  */
 @Composable
-private fun FloatingNavigationBar(
+fun FloatingNavigationBar(
     selectedTab: Int,
+    isDarkTheme: Boolean,
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Container Navbar Mengambang dengan gradien warna transisi hitam menuju abu-abu (3D effect)
+    // Animasi perubahan warna tema gelap <-> terang untuk Navbar
+    val animBgTop by animateColorAsState(
+        targetValue = if (isDarkTheme) Color(0xF50B0B0D) else Color(0xFFFFFFFF),
+        animationSpec = tween(350),
+        label = "navBgTop"
+    )
+    val animBgMid by animateColorAsState(
+        targetValue = if (isDarkTheme) Color(0xF518181B) else Color(0xFFFAFAFC),
+        animationSpec = tween(350),
+        label = "navBgMid"
+    )
+    val animBgBottom by animateColorAsState(
+        targetValue = if (isDarkTheme) Color(0xF526262A) else Color(0xFFF2F2F5),
+        animationSpec = tween(350),
+        label = "navBgBottom"
+    )
+    val animBorderTop by animateColorAsState(
+        targetValue = if (isDarkTheme) Color.White.copy(alpha = 0.24f) else Color.Black.copy(alpha = 0.08f),
+        animationSpec = tween(350),
+        label = "navBorderTop"
+    )
+    val animBorderBottom by animateColorAsState(
+        targetValue = if (isDarkTheme) Color.White.copy(alpha = 0.03f) else Color.Black.copy(alpha = 0.03f),
+        animationSpec = tween(350),
+        label = "navBorderBottom"
+    )
+    val animActiveColor by animateColorAsState(
+        targetValue = if (isDarkTheme) Color.White else Color(0xFF111111),
+        animationSpec = tween(350),
+        label = "navActiveColor"
+    )
+    val animInactiveColor by animateColorAsState(
+        targetValue = Color(0xFF8E8E93),
+        animationSpec = tween(350),
+        label = "navInactiveColor"
+    )
+    val animShadowSpot by animateColorAsState(
+        targetValue = if (isDarkTheme) Color.Black.copy(alpha = 0.85f) else Color.Black.copy(alpha = 0.12f),
+        animationSpec = tween(350),
+        label = "navShadowSpot"
+    )
+    val animShadowAmbient by animateColorAsState(
+        targetValue = if (isDarkTheme) Color.Black.copy(alpha = 0.60f) else Color.Black.copy(alpha = 0.06f),
+        animationSpec = tween(350),
+        label = "navShadowAmbient"
+    )
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(68.dp)
             .shadow(
-                elevation = 14.dp,
+                elevation = if (isDarkTheme) 14.dp else 10.dp,
                 shape = RoundedCornerShape(34.dp),
-                spotColor = Color.Black.copy(alpha = 0.85f),
-                ambientColor = Color.Black.copy(alpha = 0.60f)
+                spotColor = animShadowSpot,
+                ambientColor = animShadowAmbient
             )
             .clip(RoundedCornerShape(34.dp))
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xF50B0B0D), // Hitam pekat di bagian atas
-                        Color(0xF518181B), // Transisi gelap halus di tengah
-                        Color(0xF526262A)  // Abu-abu tipis/sepintas di bagian bawah untuk efek 3D
-                    )
+                    colors = listOf(animBgTop, animBgMid, animBgBottom)
                 )
             )
             .border(
                 width = 1.dp,
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.24f), // Highlight refleksi cahaya di bibir atas (3D rim)
-                        Color.White.copy(alpha = 0.08f), // Sisi samping
-                        Color.White.copy(alpha = 0.03f)  // Lembut di bagian bawah
-                    )
+                    colors = listOf(animBorderTop, animBorderBottom)
                 ),
                 shape = RoundedCornerShape(34.dp)
             )
@@ -469,51 +568,61 @@ private fun FloatingNavigationBar(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Item 1: Home (18dp x 18dp sesuai kode pengguna)
+            // Item 1: Home
             NavBarItem(
                 iconRes = R.drawable.ic_nav_home,
                 label = "Home",
                 isSelected = selectedTab == 0,
+                activeColor = animActiveColor,
+                inactiveColor = animInactiveColor,
                 iconWidth = 18.dp,
                 iconHeight = 18.dp,
                 onClick = { onTabSelected(0) }
             )
 
-            // Item 2: Shop (icon_shop.png sepatu)
+            // Item 2: Shop
             NavBarItem(
                 iconRes = R.drawable.icon_shop,
                 label = "Shop",
                 isSelected = selectedTab == 1,
+                activeColor = animActiveColor,
+                inactiveColor = animInactiveColor,
                 iconWidth = 22.dp,
                 iconHeight = 18.dp,
                 onClick = { onTabSelected(1) }
             )
 
-            // Item 3: Search (magnifying glass)
+            // Item 3: Search
             NavBarItem(
                 iconRes = R.drawable.ic_nav_search,
                 label = "Search",
                 isSelected = selectedTab == 2,
+                activeColor = animActiveColor,
+                inactiveColor = animInactiveColor,
                 iconWidth = 21.dp,
                 iconHeight = 20.dp,
                 onClick = { onTabSelected(2) }
             )
 
-            // Item 4: Bag (bag_icon.xml, 22dp x 20.5dp)
+            // Item 4: Bag
             NavBarItem(
                 iconRes = R.drawable.bag_icon,
                 label = "Bag",
                 isSelected = selectedTab == 3,
+                activeColor = animActiveColor,
+                inactiveColor = animInactiveColor,
                 iconWidth = 22.dp,
                 iconHeight = 20.5.dp,
                 onClick = { onTabSelected(3) }
             )
 
-            // Item 5: Profile (frame_1 avatar, 20dp x 22dp)
+            // Item 5: Profile
             NavBarItem(
                 iconRes = R.drawable.ic_nav_profile,
                 label = "Profile",
                 isSelected = selectedTab == 4,
+                activeColor = animActiveColor,
+                inactiveColor = animInactiveColor,
                 iconWidth = 20.dp,
                 iconHeight = 22.dp,
                 onClick = { onTabSelected(4) }
@@ -530,13 +639,13 @@ private fun NavBarItem(
     @DrawableRes iconRes: Int,
     label: String,
     isSelected: Boolean,
+    activeColor: Color,
+    inactiveColor: Color,
     iconWidth: androidx.compose.ui.unit.Dp,
     iconHeight: androidx.compose.ui.unit.Dp,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val activeColor = Color.White
-    val inactiveColor = Color(0xFF8E8E93)
     val color = if (isSelected) activeColor else inactiveColor
 
     Column(
@@ -544,7 +653,7 @@ private fun NavBarItem(
             .clip(RoundedCornerShape(12.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(bounded = false, radius = 24.dp, color = Color.White),
+                indication = ripple(bounded = false, radius = 24.dp, color = activeColor),
                 onClick = onClick
             )
             .padding(horizontal = 8.dp, vertical = 4.dp),
