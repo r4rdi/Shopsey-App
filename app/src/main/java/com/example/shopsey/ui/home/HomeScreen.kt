@@ -1,6 +1,11 @@
 package com.example.shopsey.ui.home
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationEndReason
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +17,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,10 +35,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -139,6 +149,35 @@ fun HomeScreen(
     // Tab navigasi aktif pada floating navbar (0 = Home)
     var selectedNavTab by remember { mutableIntStateOf(0) }
 
+    // Progress animasi untuk Scroll-Timer Indicator (0f -> 1f)
+    val timerProgress = remember { Animatable(0f) }
+    val autoScrollDurationMs = 4500 // Durasi delay tiap section (4.5 detik)
+
+    // Efek Auto-Scrolling: Berjalan otomatis berdasarkan durasi waktu (delay)
+    // dan memicu perpindahan halaman ke section/kontainer berikutnya.
+    // Jika mencapai section terakhir (Jordan 6 / homebg6), akan otomatis scroll kembali ke section 1 (Nike / homebg1).
+    LaunchedEffect(pagerState.currentPage) {
+        // Tunggu jika pengguna sedang menyentuh / menggeser layar secara manual
+        snapshotFlow { pagerState.isScrollInProgress }
+            .filter { !it }
+            .first()
+
+        timerProgress.snapTo(0f)
+        val animationResult = timerProgress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = autoScrollDurationMs, easing = LinearEasing)
+        )
+
+        // Setelah timer selesai dan layar tidak sedang disentuh, lakukan scroll ke section berikutnya
+        if (animationResult.endReason == AnimationEndReason.Finished && !pagerState.isScrollInProgress) {
+            val nextPage = (pagerState.currentPage + 1) % sections.size
+            pagerState.animateScrollToPage(
+                page = nextPage,
+                animationSpec = tween(durationMillis = 750, easing = FastOutSlowInEasing)
+            )
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -156,7 +195,48 @@ fun HomeScreen(
             )
         }
 
-        // 2. Floating Navbar dengan position fixed (stay in place) & overflow no scrolling
+        // 2. Scroll-Timer Indicator (Batang progress penanda waktu jalan auto-scrolling)
+        // Diletakkan di ujung kanan bawah (sejajar dengan area tombol Explore)
+        val currentDisplayNumber = (pagerState.currentPage + 1).toString().padStart(2, '0')
+        val totalSectionsNumber = sections.size.toString().padStart(2, '0')
+
+        Column(
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(end = 26.dp, bottom = 152.dp)
+        ) {
+            // Label penanda nomor section (misal: 01 / 06)
+            Text(
+                text = "$currentDisplayNumber / $totalSectionsNumber",
+                color = Color.White.copy(alpha = 0.85f),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.5.sp
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Batang Timer Progress Bar (Track & Fill)
+            Box(
+                modifier = Modifier
+                    .width(62.dp)
+                    .height(3.5.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(Color.White.copy(alpha = 0.25f))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(fraction = timerProgress.value.coerceIn(0f, 1f))
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.White)
+                )
+            }
+        }
+
+        // 3. Floating Navbar dengan position fixed (stay in place) & overflow no scrolling
         FloatingNavigationBar(
             selectedTab = selectedNavTab,
             onTabSelected = { selectedNavTab = it },
