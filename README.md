@@ -16,8 +16,6 @@
 
 ## 📸 Tampilan Aplikasi (Screenshots)
 
-*(Ganti URL gambar di bawah ini dengan screenshot aplikasi Anda setelah di-upload ke GitHub atau Imgur)*
-
 | Splash & Home | Kategori Produk | Detail Produk | Keranjang (Cart) |
 | :---: | :---: | :---: | :---: |
 | <img src="app/src/main/res/drawable/splash_screen_page.png" width="200"/> | <img src="app/src/main/res/drawable/kategori_page.png" width="200"/> | <img src="URL_GAMBAR_3" width="200"/> | <img src="app/src/main/res/drawable/cart_page.png" width="200"/> |
