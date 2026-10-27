@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -604,7 +605,7 @@ fun FloatingNavigationBar(
                 onClick = { onTabSelected(2) }
             )
 
-            // Item 4: Bag
+            // Item 4: Bag (dengan badge jumlah item 1 sesuai Screenshot 4)
             NavBarItem(
                 iconRes = R.drawable.bag_icon,
                 label = "Bag",
@@ -613,6 +614,7 @@ fun FloatingNavigationBar(
                 inactiveColor = animInactiveColor,
                 iconWidth = 22.dp,
                 iconHeight = 20.5.dp,
+                badgeCount = 1,
                 onClick = { onTabSelected(3) }
             )
 
@@ -643,6 +645,7 @@ private fun NavBarItem(
     inactiveColor: Color,
     iconWidth: androidx.compose.ui.unit.Dp,
     iconHeight: androidx.compose.ui.unit.Dp,
+    badgeCount: Int = 0,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -660,12 +663,33 @@ private fun NavBarItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            painter = painterResource(id = iconRes),
-            contentDescription = label,
-            tint = color,
-            modifier = Modifier.size(width = iconWidth, height = iconHeight)
-        )
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = label,
+                tint = color,
+                modifier = Modifier.size(width = iconWidth, height = iconHeight)
+            )
+
+            if (badgeCount > 0) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(start = 13.dp, bottom = 9.dp)
+                        .size(13.dp)
+                        .clip(CircleShape)
+                        .background(color),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "$badgeCount",
+                        color = if (color == Color.White) Color.Black else Color.White,
+                        fontSize = 8.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(3.dp))
 

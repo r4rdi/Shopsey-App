@@ -2,6 +2,7 @@ package com.example.shopsey.ui.bag
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,12 +18,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -32,160 +40,238 @@ import androidx.compose.ui.unit.sp
 import com.example.shopsey.R
 
 /**
- * Halaman Bag / Cart (Shopping Bag) bertema Terang (Light Mode).
+ * Halaman Bag (Shopping Bag) ShopSey sesuai referensi desain lampiran (Screenshot 4).
+ *
+ * Menggunakan gambar produk Air Jordan 4 'Toro' dari R.drawable.bag1.
+ *
+ * Komponen:
+ * 1. Header: Judul "Bag" rata kiri
+ * 2. Kartu Produk: Gambar produk Air Jordan 4 'Toro', nama, kategori, colorway, ukuran
+ * 3. Selector Jumlah (Qty 1 ⌄) & Harga Satuan (Rp3.329.000)
+ * 4. Rincian Biaya: Subtotal, Shipping, Estimated Total (+ Tax)
+ * 5. Tombol Checkout: Kapsul hitam pekat full-width
  */
 @Composable
 fun BagScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCheckoutClick: () -> Unit = {}
 ) {
+    val scrollState = rememberScrollState()
+    var quantity by remember { mutableIntStateOf(1) }
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF7F7F9))
+            .background(Color.White)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .statusBarsPadding()
-                .padding(horizontal = 20.dp, vertical = 14.dp)
+                .padding(horizontal = 20.dp)
         ) {
-            // Header
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ----------------------------------------------------
+            // 1. HEADER: Judul Halaman "Bag"
+            // ----------------------------------------------------
+            Text(
+                text = "Bag",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF111111)
+            )
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            // ----------------------------------------------------
+            // 2. KARTU PRODUK (Air Jordan 4 'Toro')
+            // ----------------------------------------------------
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top
+            ) {
+                // Wadah Gambar Sepatu dengan background abu-abu terang
+                Box(
+                    modifier = Modifier
+                        .size(135.dp)
+                        .background(Color(0xFFEEEEF0))
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bag1),
+                        contentDescription = "Air Jordan 4 'Toro'",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Detail Informasi Produk
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Air Jordan 4 'Toro'",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF111111)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Men's Shoes",
+                        fontSize = 14.sp,
+                        color = Color(0xFF555555)
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = "Fire Red/Black/Cement Grey/White",
+                        fontSize = 13.sp,
+                        color = Color(0xFF777777),
+                        lineHeight = 18.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Size: 42",
+                        fontSize = 14.sp,
+                        color = Color(0xFF555555)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Baris Pilihan Quantity (Qty 1 ⌄) & Harga Produk
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Selector Qty
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable { /* Ubah qty jika diperlukan */ }
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "Qty $quantity",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF111111)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Pilih Jumlah",
+                        tint = Color(0xFF111111),
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+
+                // Harga Satuan
                 Text(
-                    text = "Bag",
-                    fontSize = 28.sp,
+                    text = "Rp3.329.000",
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF111111)
                 )
-                Text(
-                    text = "1 item",
-                    fontSize = 15.sp,
-                    color = Color(0xFF8E8E93)
-                )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(26.dp))
 
-            // Cart Item Card
-            Surface(
-                shape = RoundedCornerShape(18.dp),
-                color = Color.White,
-                shadowElevation = 2.dp,
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFEBEBF0)),
-                modifier = Modifier.fillMaxWidth()
+            // Garis Pembatas
+            HorizontalDivider(
+                color = Color(0xFFE5E5EA),
+                thickness = 1.dp
+            )
+
+            Spacer(modifier = Modifier.height(22.dp))
+
+            // ----------------------------------------------------
+            // 3. RINCIAN BIAYA (Subtotal, Shipping, Estimated Total)
+            // ----------------------------------------------------
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
+                // Subtotal
                 Row(
-                    modifier = Modifier.padding(14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(90.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFF2F2F5))
-                            .padding(6.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.shop1),
-                            contentDescription = "Cart Item",
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(14.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Nike Alphafly 4 Prototype",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF111111)
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Text(
-                            text = "Size: 42.5 • Men's Road Racing",
-                            fontSize = 13.sp,
-                            color = Color(0xFF8E8E93)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Rp3.499.000",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF111111)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
-
-            // Order Summary
-            Surface(
-                shape = RoundedCornerShape(18.dp),
-                color = Color.White,
-                shadowElevation = 2.dp,
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFEBEBF0)),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(18.dp)) {
                     Text(
-                        text = "Summary",
-                        fontSize = 18.sp,
+                        text = "Subtotal",
+                        fontSize = 14.sp,
+                        color = Color(0xFF555555)
+                    )
+                    Text(
+                        text = "Rp3.329.000,00",
+                        fontSize = 14.sp,
+                        color = Color(0xFF555555)
+                    )
+                }
+
+                // Shipping
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Shipping",
+                        fontSize = 14.sp,
+                        color = Color(0xFF555555)
+                    )
+                    Text(
+                        text = "Standard - Free",
+                        fontSize = 14.sp,
+                        color = Color(0xFF555555)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Estimated Total
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Estimated Total",
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF111111)
                     )
-                    Spacer(modifier = Modifier.height(14.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Subtotal", color = Color(0xFF555555), fontSize = 14.sp)
-                        Text("Rp3.499.000", color = Color(0xFF111111), fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Estimated Shipping", color = Color(0xFF555555), fontSize = 14.sp)
-                        Text("Free", color = Color(0xFF34C759), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                    }
-                    Spacer(modifier = Modifier.height(14.dp))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Color(0xFFE5E5EA))
+                    Text(
+                        text = "Rp3.329.000,00 + Tax",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF111111)
                     )
-                    Spacer(modifier = Modifier.height(14.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Total", color = Color(0xFF111111), fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Text("Rp3.499.000", color = Color(0xFF111111), fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            // Checkout Button
+            // ----------------------------------------------------
+            // 4. TOMBOL CHECKOUT (Kapsul Hitam Pekat)
+            // ----------------------------------------------------
             Surface(
-                onClick = { /* Checkout action */ },
+                onClick = onCheckoutClick,
                 shape = RoundedCornerShape(50),
                 color = Color.Black,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
+                    .height(56.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
@@ -197,7 +283,8 @@ fun BagScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(140.dp))
+            // Bottom Space agar konten tidak tertutup Floating Navbar
+            Spacer(modifier = Modifier.height(130.dp))
         }
     }
 }

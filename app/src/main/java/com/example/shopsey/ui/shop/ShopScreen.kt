@@ -33,13 +33,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -204,7 +208,7 @@ fun ShopScreen(
                     .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
                 Surface(
-                    onClick = { isGenderDropdownExpanded = true },
+                    onClick = { isGenderDropdownExpanded = !isGenderDropdownExpanded },
                     shape = RoundedCornerShape(50),
                     color = Color.White,
                     shadowElevation = 2.dp,
@@ -222,7 +226,7 @@ fun ShopScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            imageVector = if (isGenderDropdownExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                             contentDescription = "Pilih Kategori",
                             tint = Color(0xFF111111),
                             modifier = Modifier.size(20.dp)
@@ -230,25 +234,191 @@ fun ShopScreen(
                     }
                 }
 
-                DropdownMenu(
-                    expanded = isGenderDropdownExpanded,
-                    onDismissRequest = { isGenderDropdownExpanded = false },
-                    modifier = Modifier.background(Color.White)
+                MaterialTheme(
+                    shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(18.dp))
                 ) {
-                    listOf("Men", "Women", "Kids").forEach { genderOption ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = genderOption,
-                                    fontWeight = if (selectedGender == genderOption) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (selectedGender == genderOption) Color.Black else Color(0xFF444444)
-                                )
-                            },
-                            onClick = {
-                                selectedGender = genderOption
-                                isGenderDropdownExpanded = false
+                    DropdownMenu(
+                        expanded = isGenderDropdownExpanded,
+                        onDismissRequest = { isGenderDropdownExpanded = false },
+                        modifier = Modifier
+                            .width(225.dp)
+                            .background(Color(0xFFEEEEF2))
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    ) {
+                        // Section 1: Genders (Women, Men, Kids)
+                        listOf("Women", "Men", "Kids").forEach { genderOption ->
+                            val isSelected = selectedGender == genderOption
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (isSelected) Color(0xFFD6D6DE) else Color.Transparent)
+                                    .clickable {
+                                        selectedGender = genderOption
+                                        isGenderDropdownExpanded = false
+                                    }
+                                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = genderOption,
+                                        color = Color(0xFF111111),
+                                        fontSize = 15.sp,
+                                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
+                                    )
+                                    if (isSelected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Selected",
+                                            tint = Color(0xFF111111),
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                }
                             }
+                        }
+
+                        HorizontalDivider(
+                            color = Color(0xFFDCDCE0),
+                            thickness = 0.8.dp,
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
                         )
+
+                        // Section 2: Jordan Brand
+                        val isJordanSelected = selectedGender == "Jordan"
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (isJordanSelected) Color(0xFFD6D6DE) else Color.Transparent)
+                                .clickable {
+                                    selectedGender = "Jordan"
+                                    isGenderDropdownExpanded = false
+                                }
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Black),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_jordan_jumpman),
+                                    contentDescription = "Jordan",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Jordan",
+                                color = Color(0xFF111111),
+                                fontSize = 15.sp,
+                                fontWeight = if (isJordanSelected) FontWeight.SemiBold else FontWeight.Medium
+                            )
+                        }
+
+                        HorizontalDivider(
+                            color = Color(0xFFDCDCE0),
+                            thickness = 0.8.dp,
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+                        )
+
+                        // Section 3: Sports & Activities
+                        listOf(
+                            "Running",
+                            "Basketball",
+                            "Tennis & Pickleball",
+                            "Football",
+                            "Gym & Training"
+                        ).forEach { sport ->
+                            val isSelected = selectedGender == sport
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (isSelected) Color(0xFFD6D6DE) else Color.Transparent)
+                                    .clickable {
+                                        selectedGender = sport
+                                        isGenderDropdownExpanded = false
+                                    }
+                                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                            ) {
+                                Text(
+                                    text = sport,
+                                    color = Color(0xFF111111),
+                                    fontSize = 15.sp,
+                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
+                                )
+                            }
+                        }
+
+                        HorizontalDivider(
+                            color = Color(0xFFDCDCE0),
+                            thickness = 0.8.dp,
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+                        )
+
+                        // Section 4: More Sports
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    selectedGender = "More Sports"
+                                    isGenderDropdownExpanded = false
+                                }
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "More Sports",
+                                color = Color(0xFF111111),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Icon(
+                                imageVector = Icons.Default.ChevronRight,
+                                contentDescription = "More",
+                                tint = Color(0xFF555555),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+
+                        HorizontalDivider(
+                            color = Color(0xFFDCDCE0),
+                            thickness = 0.8.dp,
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+                        )
+
+                        // Section 5: All Conditions Gear
+                        val isAcgSelected = selectedGender == "All Conditions Gear"
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (isAcgSelected) Color(0xFFD6D6DE) else Color.Transparent)
+                                .clickable {
+                                    selectedGender = "All Conditions Gear"
+                                    isGenderDropdownExpanded = false
+                                }
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = "All Conditions Gear",
+                                color = Color(0xFF111111),
+                                fontSize = 15.sp,
+                                fontWeight = if (isAcgSelected) FontWeight.SemiBold else FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
