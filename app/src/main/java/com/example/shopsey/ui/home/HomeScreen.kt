@@ -41,8 +41,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -143,8 +147,18 @@ fun HomeScreen(
         )
     }
 
+    // Konfigurasi Infinite Scrolling (Seamless Carousel):
+    // Menggunakan virtual page count agar pengguna maupun mekanisme auto-scroll
+    // dapat melakukan scroll ke bawah secara terus menerus (infinite loop) dari Section 6 (Jordan) kembali ke Section 1 (Nike).
+    val virtualCycleCount = 20_000
+    val virtualPageCount = sections.size * virtualCycleCount // 120.000 halaman
+    val initialPage = (virtualPageCount / 2) - ((virtualPageCount / 2) % sections.size) // Mulai tepat di Section 1 (Nike)
+
     // Pager state untuk Section Scrolling (mengunci ke section berikutnya dengan snap halus)
-    val pagerState = rememberPagerState(pageCount = { sections.size })
+    val pagerState = rememberPagerState(
+        initialPage = initialPage,
+        pageCount = { virtualPageCount }
+    )
 
     // Tab navigasi aktif pada floating navbar (0 = Home)
     var selectedNavTab by remember { mutableIntStateOf(0) }
@@ -153,28 +167,60 @@ fun HomeScreen(
     val timerProgress = remember { Animatable(0f) }
     val autoScrollDurationMs = 4500 // Durasi delay tiap section (4.5 detik)
 
-    // Efek Auto-Scrolling: Berjalan otomatis berdasarkan durasi waktu (delay)
-    // dan memicu perpindahan halaman ke section/kontainer berikutnya.
-    // Jika mencapai section terakhir (Jordan 6 / homebg6), akan otomatis scroll kembali ke section 1 (Nike / homebg1).
-    LaunchedEffect(pagerState.currentPage) {
-        // Tunggu jika pengguna sedang menyentuh / menggeser layar secara manual
-        snapshotFlow { pagerState.isScrollInProgress }
-            .filter { !it }
-            .first()
+    // Efek Auto-Scrolling & Timer Bar:
+    // Menggunakan coroutine loop terisolasi yang stabil (tidak ter-cancel di tengah jalan saat melewati 50% scroll)
+    // sehingga transisi scroll berjalan penuh (Full One Page Section Scroll) tanpa macet/stuck di tengah.
+    LaunchedEffect(pagerState) {
+        while (isActive) {
+            // Tunggu hingga pager benar-benar diam (settled) dan tidak sedang digeser manual oleh pengguna
+            if (pagerState.isScrollInProgress) {
+                snapshotFlow { pagerState.isScrollInProgress }
+                    .filter { !it }
+                    .first()
+            }
 
-        timerProgress.snapTo(0f)
-        val animationResult = timerProgress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = autoScrollDurationMs, easing = LinearEasing)
-        )
+            // Reset indikator timer ke 0 untuk section saat ini
+            timerProgress.snapTo(0f)
 
-        // Setelah timer selesai dan layar tidak sedang disentuh, lakukan scroll ke section berikutnya
-        if (animationResult.endReason == AnimationEndReason.Finished && !pagerState.isScrollInProgress) {
-            val nextPage = (pagerState.currentPage + 1) % sections.size
-            pagerState.animateScrollToPage(
-                page = nextPage,
-                animationSpec = tween(durationMillis = 750, easing = FastOutSlowInEasing)
-            )
+            // Jalankan animasi pengisian bar timer (0f -> 1f)
+            // Sekaligus memantau apakah pengguna mulai menggeser layar secara manual
+            var userInterrupted = false
+            coroutineScope {
+                val timerJob = launch {
+                    timerProgress.animateTo(
+                        targetValue = 1f,
+                        animationSpec = tween(durationMillis = autoScrollDurationMs, easing = LinearEasing)
+                    )
+                }
+
+                val touchWatcherJob = launch {
+                    snapshotFlow { pagerState.isScrollInProgress }
+                        .filter { it }
+                        .first()
+                    userInterrupted = true
+                    timerJob.cancel()
+                }
+
+                timerJob.join()
+                touchWatcherJob.cancel()
+            }
+
+            // Jika durasi timer penuh tanpa disentuh pengguna, lakukan Full Section Scroll ke section berikutnya
+            if (!userInterrupted) {
+                try {
+                    pagerState.animateScrollToPage(
+                        page = pagerState.currentPage + 1,
+                        animationSpec = tween(durationMillis = 650, easing = FastOutSlowInEasing)
+                    )
+                } catch (e: Exception) {
+                    if (e is CancellationException && !isActive) {
+                        throw e
+                    }
+                }
+            } else {
+                // Pengguna menggeser layar manual, kosongkan timer bar
+                timerProgress.snapTo(0f)
+            }
         }
     }
 
@@ -183,12 +229,14 @@ fun HomeScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // 1. Mekanisme Section Scrolling menggunakan VerticalPager
+        // 1. Mekanisme Section Scrolling menggunakan VerticalPager dengan Infinite Looping
         VerticalPager(
             state = pagerState,
+            key = { pageIndex -> pageIndex },
             modifier = Modifier.fillMaxSize()
         ) { pageIndex ->
-            val section = sections[pageIndex]
+            val actualIndex = (pageIndex % sections.size + sections.size) % sections.size
+            val section = sections[actualIndex]
             HomeSectionItem(
                 section = section,
                 onExploreClick = { onExploreClick(section) }
@@ -197,7 +245,8 @@ fun HomeScreen(
 
         // 2. Scroll-Timer Indicator (Batang progress penanda waktu jalan auto-scrolling)
         // Diletakkan di ujung kanan bawah (sejajar dengan area tombol Explore)
-        val currentDisplayNumber = (pagerState.currentPage + 1).toString().padStart(2, '0')
+        val currentSectionIndex = (pagerState.currentPage % sections.size + sections.size) % sections.size
+        val currentDisplayNumber = (currentSectionIndex + 1).toString().padStart(2, '0')
         val totalSectionsNumber = sections.size.toString().padStart(2, '0')
 
         Column(

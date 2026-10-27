@@ -1,8 +1,9 @@
 # 🛍️ ShopSey — Elegant E-Commerce Mobile App for Sports and Lifestyle Gear
 
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Android Studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=flat&logo=android-studio&logoColor=white)
-![Kotlin](https://img.shields.io/badge/Kotlin-B125EA?style=flat&logo=kotlin&logoColor=white)
+![Android Studio](https://img.shields.io/aur/license/android-studio?style=for-the-badge&logo=android&logoColor=%233DDC84&logoSize=auto&label=Android&labelColor=FFFFFF&color=000000&cacheSeconds=3600&link=https%3A%2F%2Fdeveloper.android.com%2Fstudio%3Fhl%3Did
+)
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-MVVM-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Mock_Data_(UI_Only)-orange.svg)
 
