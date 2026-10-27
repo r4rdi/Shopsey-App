@@ -163,7 +163,7 @@ fun HomeScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(bottom = 12.dp, start = 20.dp, end = 20.dp)
+                .padding(bottom = 26.dp, start = 20.dp, end = 20.dp)
         )
     }
 }
@@ -208,7 +208,7 @@ private fun HomeSectionItem(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(430.dp)
+                .height(450.dp)
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
@@ -223,12 +223,12 @@ private fun HomeSectionItem(
         )
 
         // Konten Informasi Produk (Brand Icon, Title, Subtitle, Tombol Explore)
-        // Diberikan margin bottom yang lebih lega (126dp) agar tombol Explore berjarak nyaman dari floating navbar
+        // Diberikan margin bottom yang proporsional (140dp) menyesuaikan posisi navbar yang dinaikkan
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .navigationBarsPadding()
-                .padding(start = 24.dp, end = 24.dp, bottom = 126.dp)
+                .padding(start = 24.dp, end = 24.dp, bottom = 140.dp)
         ) {
             // Icon Brand Produk (Di-scale lebih besar dan proporsional untuk seluruh brand)
             Image(
@@ -336,7 +336,7 @@ private fun FloatingNavigationBar(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp),
+                .padding(start = 10.dp, end = 10.dp, top = 6.dp, bottom = 2.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
