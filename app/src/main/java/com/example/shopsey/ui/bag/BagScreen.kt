@@ -104,18 +104,16 @@ fun BagScreen(
                     .padding(4.dp),
                 verticalAlignment = Alignment.Top
             ) {
-                // Wadah Gambar Sepatu dengan background abu-abu terang
+                // Wadah Gambar Sepatu dipaskan tanpa white space / padding
                 Box(
                     modifier = Modifier
                         .size(135.dp)
-                        .background(Color(0xFFEEEEF0))
-                        .padding(8.dp),
-                    contentAlignment = Alignment.Center
+                        .clip(RoundedCornerShape(12.dp))
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.bag1),
                         contentDescription = "Air Jordan 4 'Toro'",
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

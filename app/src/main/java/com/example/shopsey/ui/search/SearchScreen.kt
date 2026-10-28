@@ -535,7 +535,6 @@ private fun SearchResultCard(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF3F3F5))
             )
 
             Spacer(modifier = Modifier.width(14.dp))

@@ -589,15 +589,12 @@ fun ShopScreen(
                             modifier = Modifier
                                 .size(130.dp)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(Color(0xFFEEEEF2))
                                 .clickable { onProductClick("recent_$resId") }
-                                .padding(10.dp),
-                            contentAlignment = Alignment.Center
                         ) {
                             Image(
                                 painter = painterResource(id = resId),
                                 contentDescription = "Recently Viewed",
-                                contentScale = ContentScale.Fit,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -1068,20 +1065,17 @@ private fun ProductGridItem(
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
     ) {
-        // Thumbnail Container dengan background terang
+        // Thumbnail Container dipaskan dengan ukuran gambar tanpa white space / padding
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(115.dp)
+                .aspectRatio(1f)
                 .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFF0F0F3))
-                .padding(8.dp),
-            contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = product.imageRes),
                 contentDescription = product.name,
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         }

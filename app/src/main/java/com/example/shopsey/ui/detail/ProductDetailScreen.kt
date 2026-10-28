@@ -224,31 +224,25 @@ fun ProductDetailScreen(
 
             // ----------------------------------------------------
             // 2. GALERI FOTO PRODUK (HorizontalPager detail1 s/d detail8)
+            // Kelebaran gambar dipaskan penuh dengan lebar device HP pengguna (edge-to-edge),
+            // tanpa padding atau white space / negative space.
             // ----------------------------------------------------
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1.08f)
-                    .background(Color(0xFFF7F7F8))
+                    .aspectRatio(1070f / 1338f)
             ) {
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize()
                 ) { pageIndex ->
                     val imageRes = product.images.getOrElse(pageIndex) { R.drawable.bag1 }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 24.dp, vertical = 18.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = imageRes),
-                            contentDescription = "${product.title} Angle ${pageIndex + 1}",
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
+                    Image(
+                        painter = painterResource(id = imageRes),
+                        contentDescription = "${product.title} Angle ${pageIndex + 1}",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
 
@@ -742,26 +736,18 @@ private fun RecommendationCard(
             .width(185.dp)
             .clickable(onClick = onClick)
     ) {
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = Color(0xFFF6F6F7),
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(185.dp)
+                .clip(RoundedCornerShape(12.dp))
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(14.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = item.imageRes),
-                    contentDescription = item.title,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+            Image(
+                painter = painterResource(id = item.imageRes),
+                contentDescription = item.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
         }
 
         Spacer(modifier = Modifier.height(10.dp))

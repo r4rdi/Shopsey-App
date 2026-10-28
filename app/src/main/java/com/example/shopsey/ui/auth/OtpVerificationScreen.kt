@@ -89,7 +89,7 @@ fun triggerSystemNotification(context: Context, otpCode: String) {
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.logo3)
-            .setContentTitle("ShopSey Security")
+            .setContentTitle("ShopSey")
             .setContentText("Kode verifikasi Anda adalah $otpCode. Gunakan untuk masuk.")
             .setStyle(NotificationCompat.BigTextStyle().bigText("Kode verifikasi akun ShopSey Anda adalah $otpCode. Jangan berikan kode ini kepada siapa pun."))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
