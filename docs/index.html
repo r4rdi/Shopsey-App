@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopSey — Demo Interaktif Seluruh Halaman Aplikasi Android</title>
+  <meta name="description" content="Demo website publik untuk seluruh halaman aplikasi mobile ShopSey (Tugas Akhir Android Studio Jetpack Compose). Menampilkan simulasi autentikasi OTP, katalog brand sinematik, dan keranjang belanja.">
+  <link rel="icon" type="image/png" href="assets/images/logo3.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Light Glow -->
+  <div class="bg-ambient"></div>
+
+  <!-- Top Sticky Header -->
+  <header class="site-header">
+    <div class="brand-section">
+      <img src="assets/images/logo_shopsey_white.png" alt="ShopSey Logo" class="brand-logo-img">
+      <span class="brand-badge">
+        <span class="pulse-dot"></span>
+        LIVE DEMO PUBLIK
+      </span>
+    </div>
+
+    <!-- View Mode Switcher -->
+    <div class="nav-view-mode">
+      <button class="view-btn active" id="btn-mode-simulator">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+        Simulator HP
+      </button>
+      <button class="view-btn" id="btn-mode-overview">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Semua Halaman (Galeri)
+      </button>
+      <button class="view-btn" id="btn-mode-docs">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Arsitektur & Dokumen
+      </button>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <a href="https://github.com/r4rdi/Shopsey-App" target="_blank" class="btn-icon-link btn-github">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub Repo
+      </a>
+      <a href="../LPJ_Tugas_Akhir_ShopSey_Android_Studio.docx" download class="btn-icon-link btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Unduh Dokumen LPJ
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="app-container">
+
+    <!-- ====================================================================
+         VIEW 1: Interactive Device Simulator Mode
+         ==================================================================== -->
+    <div class="simulator-layout" id="view-simulator">
+
+      <!-- Left Sidebar: Direct Screen Jump & Flow Navigator -->
+      <aside class="sidebar-panel">
+        <div class="panel-title">
+          <span>Pilih Halaman</span>
+          <span style="font-size: 11px; color: #71717a;">16 Screens</span>
+        </div>
+
+        <!-- Group 1: Onboarding & Autentikasi -->
+        <div class="flow-group">
+          <div class="flow-group-title">Autentikasi & Onboarding</div>
+          <button class="screen-link-btn active" data-screen="splash">
+            <span class="screen-icon">01</span>
+            <span>Splash Screen</span>
+            <span class="screen-badge-theme">Dark</span>
+          </button>
+          <button class="screen-link-btn" data-screen="landing">
+            <span class="screen-icon">02</span>
+            <span>Landing Screen</span>
+            <span class="screen-badge-theme">Dark</span>
+          </button>
+          <button class="screen-link-btn" data-screen="email-signup">
+            <span class="screen-icon">03</span>
+            <span>Email (Sign Up)</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="email-signin">
+            <span class="screen-icon">04</span>
+            <span>Email (Sign In)</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="otp">
+            <span class="screen-icon">05</span>
+            <span>Verifikasi OTP</span>
+            <span class="screen-badge-theme">Push</span>
+          </button>
+          <button class="screen-link-btn" data-screen="password">
+            <span class="screen-icon">06</span>
+            <span>Input Kata Sandi</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="create-password">
+            <span class="screen-icon">07</span>
+            <span>Buat Sandi Baru</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="register-form">
+            <span class="screen-icon">08</span>
+            <span>Form Data Diri</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="forgot-password">
+            <span class="screen-icon">09</span>
+            <span>Lupa Kata Sandi</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="login-success">
+            <span class="screen-icon">10</span>
+            <span>Login Sukses</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="welcome">
+            <span class="screen-icon">11</span>
+            <span>Welcome Collage</span>
+            <span class="screen-badge-theme">3D Dark</span>
+          </button>
+        </div>
+
+        <!-- Group 2: E-Commerce Experience -->
+        <div class="flow-group">
+          <div class="flow-group-title">Navigasi Utama & Belanja</div>
+          <button class="screen-link-btn" data-screen="home">
+            <span class="screen-icon">12</span>
+            <span>Home (Snap Pager)</span>
+            <span class="screen-badge-theme">Dark</span>
+          </button>
+          <button class="screen-link-btn" data-screen="shop">
+            <span class="screen-icon">13</span>
+            <span>Shop (Katalog)</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="search">
+            <span class="screen-icon">14</span>
+            <span>Pencarian Produk</span>
+            <span class="screen-badge-theme">Live</span>
+          </button>
+          <button class="screen-link-btn" data-screen="detail">
+            <span class="screen-icon">15</span>
+            <span>Detail Produk</span>
+            <span class="screen-badge-theme">Light</span>
+          </button>
+          <button class="screen-link-btn" data-screen="bag">
+            <span class="screen-icon">16</span>
+            <span>Keranjang (Bag)</span>
+            <span class="screen-badge-theme">Checkout</span>
+          </button>
+          <button class="screen-link-btn" data-screen="profile">
+            <span class="screen-icon">17</span>
+            <span>Profil Pengguna</span>
+            <span class="screen-badge-theme">Member</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Center Stage: The Live Phone Mockup -->
+      <section class="device-stage">
+
+        <!-- Controls Toolbar -->
+        <div class="device-toolbar">
+          <button class="toolbar-btn" id="btn-restart-app" title="Kembali ke awal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Restart
+          </button>
+          <button class="toolbar-btn" id="btn-test-notif" title="Uji Notifikasi Pop-up OTP">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Uji Notif OTP
+          </button>
+
+          <!-- Device Bezel Color Switcher -->
+          <div class="device-color-picker">
+            <span style="font-size: 11px; color: #71717a;">Warna HP:</span>
+            <div class="color-dot color-black active" data-color="black" title="Titanium Black"></div>
+            <div class="color-dot color-silver" data-color="silver" title="Titanium Silver"></div>
+            <div class="color-dot color-blue" data-color="blue" title="Midnight Navy"></div>
+          </div>
+        </div>
+
+        <!-- The Physical Phone Frame -->
+        <div class="phone-mockup" id="phone-mockup-frame">
+          <div class="phone-screen">
+
+            <!-- Dynamic Island Hardware -->
+            <div class="dynamic-island">
+              <div class="island-camera"></div>
+              <div class="island-sensor"></div>
+            </div>
+
+            <!-- Top Status Bar -->
+            <div class="phone-status-bar">
+              <span class="clock-time">09:41</span>
+              <div class="status-bar-icons">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.23 19.64 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.55 0 6.8 1.34 9.27 3.55L12 19.33 2.73 11.05C5.2 8.84 8.45 7.5 12 7.5z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="18" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="4" y="9" width="12" height="6" rx="1"/><path d="M22 11v2"/></svg>
+              </div>
+            </div>
+
+            <!-- Heads-Up System Notification (Simulasi Android Status Bar Push Alert) -->
+            <div class="heads-up-notification" id="heads-up-notif">
+              <div class="notif-header">
+                <div class="notif-app-icon">S</div>
+                <span>ShopSey • Sekarang</span>
+              </div>
+              <div class="notif-body">
+                Kode verifikasi akun ShopSey Anda adalah <span class="notif-otp-code" id="notif-otp-val">392817</span>. Jangan berikan kode ini kepada siapa pun.
+              </div>
+              <div class="notif-actions">
+                <button class="notif-btn copy-btn" id="btn-copy-otp">Salin Kode</button>
+                <button class="notif-btn" onclick="document.getElementById('heads-up-notif').classList.remove('visible')">Tutup</button>
+              </div>
+            </div>
+
+            <!-- ==========================================================
+                 SCREEN CONTAINER (VIEWPORT)
+                 ========================================================== -->
+            <div class="screen-viewport">
+
+              <!-- 1. SPLASH SCREEN -->
+              <div class="screen active" id="screen-splash">
+                <div class="splash-logo-wrap">
+                  <img src="assets/images/logo_shopsey_white.png" alt="ShopSey Logo" class="splash-logo-img">
+                  <div class="splash-hint">Ketuk layar atau tunggu 2 detik...</div>
+                </div>
+              </div>
+
+              <!-- 2. LANDING SCREEN -->
+              <div class="screen" id="screen-landing">
+                <div class="landing-carousel-bg">
+                  <img src="assets/images/landing1.png" class="landing-slide-img active" alt="Landing 1">
+                  <img src="assets/images/landing2.png" class="landing-slide-img" alt="Landing 2">
+                  <img src="assets/images/landing3.png" class="landing-slide-img" alt="Landing 3">
+                  <img src="assets/images/landing4.png" class="landing-slide-img" alt="Landing 4">
+                  <img src="assets/images/landing5.png" class="landing-slide-img" alt="Landing 5">
+                  <img src="assets/images/landing6.png" class="landing-slide-img" alt="Landing 6">
+                </div>
+                <div class="landing-vignette"></div>
+                <div class="landing-content">
+                  <div class="landing-header">
+                    <img src="assets/images/logo_shopsey_white.png" alt="ShopSey" class="landing-logo">
+                    <div class="landing-dots">
+                      <div class="landing-dot active" data-slide="0"></div>
+                      <div class="landing-dot" data-slide="1"></div>
+                      <div class="landing-dot" data-slide="2"></div>
+                      <div class="landing-dot" data-slide="3"></div>
+                      <div class="landing-dot" data-slide="4"></div>
+                      <div class="landing-dot" data-slide="5"></div>
+                    </div>
+                  </div>
+                  <div class="landing-footer">
+                    <button class="btn-landing-primary" onclick="navigateTo('email-signup')">Sign Up</button>
+                    <button class="btn-landing-secondary" onclick="navigateTo('email-signin')">Sign In</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. EMAIL INPUT (SIGN UP) -->
+              <div class="screen" id="screen-email-signup">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('landing')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Masukkan email Anda untuk bergabung</h1>
+                  <p class="auth-subtitle">Daftarkan akun member ShopSey untuk mendapatkan akses eksklusif ke rilis produk terbaru.</p>
+                  <div class="form-group">
+                    <label class="form-label">Alamat Email</label>
+                    <input type="email" class="form-input-text" id="signup-email-input" value="member@shopsey.com" placeholder="nama@email.com">
+                  </div>
+                  <p style="font-size: 11px; color: #71717a; margin-bottom: 20px; line-height: 1.4;">
+                    Dengan melanjutkan, Anda menyetujui Ketentuan Layanan dan Kebijakan Privasi ShopSey.
+                  </p>
+                  <button class="auth-btn-full" onclick="navigateTo('create-password')">Lanjutkan</button>
+                  <div class="auth-text-link" onclick="navigateTo('email-signin')">
+                    Sudah memiliki akun? <b>Sign In</b>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. EMAIL INPUT (SIGN IN) -->
+              <div class="screen" id="screen-email-signin">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('landing')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Masukkan email Anda untuk masuk</h1>
+                  <p class="auth-subtitle">Kami akan mengirimkan kode verifikasi OTP ke email Anda.</p>
+                  <div class="form-group">
+                    <label class="form-label">Alamat Email</label>
+                    <input type="email" class="form-input-text" id="signin-email-input" value="member@shopsey.com" placeholder="nama@email.com">
+                  </div>
+                  <button class="auth-btn-full" onclick="navigateTo('otp')">Lanjutkan</button>
+                  <button class="auth-btn-outline" onclick="navigateTo('password')">Gunakan Kata Sandi</button>
+                  <div class="auth-text-link" onclick="navigateTo('email-signup')">
+                    Belum punya akun? <b>Daftar Sekarang</b>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5. OTP VERIFICATION SCREEN -->
+              <div class="screen" id="screen-otp">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('email-signin')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Verifikasi email Anda</h1>
+                  <p class="auth-subtitle">Masukkan kode 6 digit yang dikirimkan ke:</p>
+                  <div class="user-email-chip">
+                    <span id="display-otp-email">member@shopsey.com</span>
+                    <span class="edit-link" onclick="navigateTo('email-signin')">Ubah</span>
+                  </div>
+                  <div class="otp-inputs-grid">
+                    <input type="text" maxlength="1" class="otp-box" value="3">
+                    <input type="text" maxlength="1" class="otp-box" value="9">
+                    <input type="text" maxlength="1" class="otp-box" value="2">
+                    <input type="text" maxlength="1" class="otp-box" value="8">
+                    <input type="text" maxlength="1" class="otp-box" value="1">
+                    <input type="text" maxlength="1" class="otp-box" value="7">
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 20px;">
+                    <span style="color: #71717a;">Kirim ulang kode dalam</span>
+                    <span style="font-weight: 700; color: #111111;" id="otp-timer-count">45d</span>
+                  </div>
+                  <button class="auth-btn-full" onclick="navigateTo('login-success')">Verifikasi & Masuk</button>
+                  <div class="auth-text-link" onclick="navigateTo('password')">
+                    Masuk menggunakan <b>Kata Sandi</b>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 6. PASSWORD INPUT SCREEN -->
+              <div class="screen" id="screen-password">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('email-signin')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Apa kata sandi Anda?</h1>
+                  <div class="user-email-chip">
+                    <span>member@shopsey.com</span>
+                    <span class="edit-link" onclick="navigateTo('email-signin')">Ubah</span>
+                  </div>
+                  <div class="form-group password-wrap">
+                    <label class="form-label">Kata Sandi</label>
+                    <input type="password" class="form-input-text" id="input-password-field" value="Member2026!">
+                    <button class="password-toggle-btn" type="button" onclick="const p = document.getElementById('input-password-field'); p.type = p.type === 'password' ? 'text' : 'password';">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <div style="text-align: right; margin-bottom: 24px;">
+                    <span style="font-size: 12px; color: #ff5722; font-weight: 600; cursor: pointer;" onclick="navigateTo('forgot-password')">Lupa kata sandi?</span>
+                  </div>
+                  <button class="auth-btn-full" onclick="navigateTo('login-success')">Masuk</button>
+                  <button class="auth-btn-outline" onclick="navigateTo('otp')">Masuk dengan Kode OTP</button>
+                </div>
+              </div>
+
+              <!-- 7. CREATE PASSWORD SCREEN (SIGN UP FLOW) -->
+              <div class="screen" id="screen-create-password">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('email-signup')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Buat kata sandi</h1>
+                  <p class="auth-subtitle">Gunakan kata sandi yang kuat untuk mengamankan akun Anda.</p>
+                  <div class="form-group password-wrap">
+                    <label class="form-label">Kata Sandi Baru</label>
+                    <input type="password" class="form-input-text" value="ShopseyPro2026!">
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: #16a34a; margin-bottom: 24px;">
+                    <div>✓ Minimal 8 karakter</div>
+                    <div>✓ Mengandung huruf besar dan kecil</div>
+                    <div>✓ Mengandung angka atau simbol khusus</div>
+                  </div>
+                  <button class="auth-btn-full" onclick="navigateTo('register-form')">Lanjutkan</button>
+                </div>
+              </div>
+
+              <!-- 8. REGISTER FORM SCREEN -->
+              <div class="screen" id="screen-register-form">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('create-password')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Lengkapi profil Anda</h1>
+                  <p class="auth-subtitle">Informasi ini digunakan untuk personalisasi rekomendasi belanja Anda.</p>
+                  <div class="form-group">
+                    <label class="form-label">Nama Depan</label>
+                    <input type="text" class="form-input-text" value="R">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Nama Belakang</label>
+                    <input type="text" class="form-input-text" value="Ardiansyah">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tanggal Lahir</label>
+                    <input type="date" class="form-input-text" value="2002-08-15">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Pilihan Kategori Minat</label>
+                    <div style="display: flex; gap: 10px;">
+                      <button type="button" class="search-chip" style="background:#111111; color:white;">Pria</button>
+                      <button type="button" class="search-chip">Wanita</button>
+                      <button type="button" class="search-chip">Anak</button>
+                    </div>
+                  </div>
+                  <button class="auth-btn-full" onclick="navigateTo('login-success')">Daftar Akun</button>
+                </div>
+              </div>
+
+              <!-- 9. FORGOT PASSWORD SCREEN -->
+              <div class="screen" id="screen-forgot-password">
+                <div class="auth-screen-layout">
+                  <div class="auth-nav-bar">
+                    <button class="auth-back-btn" onclick="navigateTo('password')">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <img src="assets/images/logo_shopsey_black.png" alt="ShopSey" class="auth-brand-logo">
+                    <div style="width: 24px;"></div>
+                  </div>
+                  <h1 class="auth-title">Reset kata sandi</h1>
+                  <p class="auth-subtitle">Verifikasikan email Anda dan buat kata sandi baru.</p>
+                  <div class="form-group">
+                    <label class="form-label">Email Terdaftar</label>
+                    <input type="email" class="form-input-text" value="member@shopsey.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Kata Sandi Baru</label>
+                    <input type="password" class="form-input-text" value="PasswordBaru2026!">
+                  </div>
+                  <button class="auth-btn-full" onclick="navigateTo('landing')">Perbarui Kata Sandi</button>
+                  <button class="auth-btn-outline" onclick="navigateTo('landing')">Batal</button>
+                </div>
+              </div>
+
+              <!-- 10. LOGIN SUCCESS SCREEN -->
+              <div class="screen" id="screen-login-success">
+                <div class="success-badge-anim">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h1 style="font-size: 26px; font-weight: 800; color: #111111; margin-bottom: 8px;">Anda berhasil masuk</h1>
+                <p style="font-size: 14px; color: #71717a; margin-bottom: 30px;">Selamat datang kembali di ShopSey. Pengalaman belanja premium Anda telah siap.</p>
+                <button class="auth-btn-full" onclick="navigateTo('welcome')">Lanjutkan</button>
+              </div>
+
+              <!-- 11. WELCOME SCREEN (30-DEGREE TILTED PHOTO COLLAGE) -->
+              <div class="screen" id="screen-welcome">
+                <div class="welcome-collage-wrap">
+                  <div class="collage-col">
+                    <img src="assets/images/welcome1.png" class="collage-img" alt="W1">
+                    <img src="assets/images/welcome2.png" class="collage-img" alt="W2">
+                    <img src="assets/images/welcome3.png" class="collage-img" alt="W3">
+                    <img src="assets/images/welcome4.png" class="collage-img" alt="W4">
+                  </div>
+                  <div class="collage-col">
+                    <img src="assets/images/welcome5.png" class="collage-img" alt="W5">
+                    <img src="assets/images/welcome6.png" class="collage-img" alt="W6">
+                    <img src="assets/images/welcome7.png" class="collage-img" alt="W7">
+                    <img src="assets/images/welcome8.png" class="collage-img" alt="W8">
+                  </div>
+                  <div class="collage-col">
+                    <img src="assets/images/welcome9.png" class="collage-img" alt="W9">
+                    <img src="assets/images/welcome10.png" class="collage-img" alt="W10">
+                    <img src="assets/images/welcome11.png" class="collage-img" alt="W11">
+                    <img src="assets/images/welcome12.png" class="collage-img" alt="W12">
+                  </div>
+                </div>
+                <div class="welcome-overlay">
+                  <div class="welcome-top">
+                    <img src="assets/images/logo_shopsey_white.png" alt="ShopSey" style="height: 30px;">
+                  </div>
+                  <div class="welcome-center">
+                    <h1 class="welcome-heading">Hi R,<br>Welcome to Shopsey.</h1>
+                    <p class="welcome-sub">Thanks for being with us! Temukan perlengkapan atletik terbaik yang dirancang untuk performa tertinggi.</p>
+                    <div style="margin-top: 20px;">
+                      <button class="btn-landing-primary" style="background:#ffffff; color:#111111; font-weight:800;" onclick="navigateTo('home')">Mulai Eksplorasi</button>
+                    </div>
+                  </div>
+                  <div class="welcome-footer-tag">MEMBER SEJAK 2026</div>
+                </div>
+              </div>
+
+              <!-- 12. HOME SCREEN (CINEMATIC DARK VERTICAL PAGER) -->
+              <div class="screen" id="screen-home">
+                <div class="home-vertical-pager">
+
+                  <!-- Slide 1: Nike -->
+                  <div class="home-section-slide active" data-index="0">
+                    <img src="assets/images/homebg1.png" class="home-section-bg" alt="Nike United">
+                    <div class="home-gradient-overlay"></div>
+                    <div class="home-section-info">
+                      <img src="assets/images/icon_nike.png" class="home-brand-icon" alt="Nike Logo">
+                      <h2 class="home-section-title">Nike United</h2>
+                      <p class="home-section-desc">Created by athletes. Inovasi mutakhir untuk performa tanpa batas.</p>
+                      <button class="home-explore-btn">Explore</button>
+                    </div>
+                  </div>
+
+                  <!-- Slide 2: Sheath Kobe -->
+                  <div class="home-section-slide" data-index="1">
+                    <img src="assets/images/homebg2.png" class="home-section-bg" alt="Kobe Protro">
+                    <div class="home-gradient-overlay"></div>
+                    <div class="home-section-info">
+                      <img src="assets/images/icon_sheathkobe.png" class="home-brand-icon" alt="Kobe Sheath">
+                      <h2 class="home-section-title">Kobe Protro</h2>
+                      <p class="home-section-desc">Passion, focus, and relentless work ethic. Semangat Mamba Mentality.</p>
+                      <button class="home-explore-btn">Explore</button>
+                    </div>
+                  </div>
+
+                  <!-- Slide 3: Adidas -->
+                  <div class="home-section-slide" data-index="2">
+                    <img src="assets/images/homebg3.png" class="home-section-bg" alt="Predator Elite">
+                    <div class="home-gradient-overlay"></div>
+                    <div class="home-section-info">
+                      <img src="assets/images/icon_adidas.png" class="home-brand-icon" alt="Adidas">
+                      <h2 class="home-section-title">Predator Elite</h2>
+                      <p class="home-section-desc">Speed, precision, and surgical touch di setiap sentuhan lapangan.</p>
+                      <button class="home-explore-btn">Explore</button>
+                    </div>
+                  </div>
+
+                  <!-- Slide 4: Puma -->
+                  <div class="home-section-slide" data-index="3">
+                    <img src="assets/images/homebg4.png" class="home-section-bg" alt="Puma Future">
+                    <div class="home-gradient-overlay"></div>
+                    <div class="home-section-info">
+                      <img src="assets/images/icon_puma.png" class="home-brand-icon" alt="Puma">
+                      <h2 class="home-section-title">Puma Future 7</h2>
+                      <p class="home-section-desc">Play without boundaries. Agility and pure energy.</p>
+                      <button class="home-explore-btn">Explore</button>
+                    </div>
+                  </div>
+
+                  <!-- Slide 5: Under Armour -->
+                  <div class="home-section-slide" data-index="4">
+                    <img src="assets/images/homebg5.png" class="home-section-bg" alt="Curry Flow">
+                    <div class="home-gradient-overlay"></div>
+                    <div class="home-section-info">
+                      <img src="assets/images/icon_underarmour.png" class="home-brand-icon" alt="Under Armour">
+                      <h2 class="home-section-title">Curry Flow 11</h2>
+                      <p class="home-section-desc">Change the game for good. Unstoppable grip di setiap manuver.</p>
+                      <button class="home-explore-btn">Explore</button>
+                    </div>
+                  </div>
+
+                  <!-- Slide 6: Jordan -->
+                  <div class="home-section-slide" data-index="5">
+                    <img src="assets/images/homebg6.png" class="home-section-bg" alt="Jordan 6">
+                    <div class="home-gradient-overlay"></div>
+                    <div class="home-section-info">
+                      <img src="assets/images/icon_jordan.png" class="home-brand-icon" alt="Jordan">
+                      <h2 class="home-section-title">Jordan 6 Sneaker</h2>
+                      <p class="home-section-desc">Defy gravity. An iconic silhouette born for flight.</p>
+                      <button class="home-explore-btn">Explore</button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Timer Progress Bar at Bottom Right -->
+                <div class="home-timer-indicator">
+                  <span class="timer-label" id="home-timer-num">01 / 06</span>
+                  <div class="timer-track">
+                    <div class="timer-fill" id="home-timer-fill"></div>
+                  </div>
+                </div>
+
+                <!-- Floating Up/Down Arrows -->
+                <div class="pager-arrow-nav">
+                  <button class="pager-nav-btn" id="btn-home-prev">▲</button>
+                  <button class="pager-nav-btn" id="btn-home-next">▼</button>
+                </div>
+              </div>
+
+              <!-- 13. SHOP SCREEN (LIGHT THEME, HERO CAROUSEL, BENTO & PICKS) -->
+              <div class="screen" id="screen-shop">
+                <div class="shop-top-bar">
+                  <div class="category-dropdown-pill">
+                    <span>Men</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="shop-action-icons">
+                    <button class="round-icon-btn" onclick="navigateTo('search')">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Hero Carousel -->
+                <div class="shop-hero-carousel">
+                  <div class="hero-slider-wrap">
+                    <div class="hero-slide active">
+                      <img src="assets/images/shop1.png" class="hero-slide-img" alt="Alphafly 4">
+                      <div class="hero-slide-title">Coming Soon: Alphafly 4 'Prototype'</div>
+                    </div>
+                    <div class="hero-slide">
+                      <img src="assets/images/shop2.png" class="hero-slide-img" alt="Phantom GX">
+                      <div class="hero-slide-title">New Release: Phantom GX Elite</div>
+                    </div>
+                    <div class="hero-slide">
+                      <img src="assets/images/shop3.png" class="hero-slide-img" alt="Mercurial">
+                      <div class="hero-slide-title">Precision Speed: Mercurial Superfly</div>
+                    </div>
+                  </div>
+                  <div class="hero-dots">
+                    <div class="hero-dot active" data-hero="0"></div>
+                    <div class="hero-dot" data-hero="1"></div>
+                    <div class="hero-dot" data-hero="2"></div>
+                  </div>
+                </div>
+
+                <!-- Bento Mosaic Categories -->
+                <div class="section-heading-row">
+                  <h3 class="section-main-heading">Categories</h3>
+                  <span class="section-link-action">Lihat Semua</span>
+                </div>
+                <div class="bento-categories-grid">
+                  <div class="category-bento-card">
+                    <img src="assets/images/shop5.png" class="category-card-img" alt="New">
+                    <span class="category-card-title">New & Featured</span>
+                  </div>
+                  <div class="category-bento-card">
+                    <img src="assets/images/shop4.png" class="category-card-img" alt="Shoes">
+                    <span class="category-card-title">Shoes</span>
+                  </div>
+                  <div class="category-bento-card">
+                    <img src="assets/images/shop11.png" class="category-card-img" alt="Clothing">
+                    <span class="category-card-title">Clothing</span>
+                  </div>
+                  <div class="category-bento-card">
+                    <img src="assets/images/shop10.png" class="category-card-img" alt="Accessories">
+                    <span class="category-card-title">Accessories</span>
+                  </div>
+                </div>
+
+                <!-- Lifestyle Picks Grid -->
+                <div class="section-heading-row" style="margin-top: 14px;">
+                  <h3 class="section-main-heading">Lifestyle Picks</h3>
+                  <span class="section-link-action">Filter & Urutkan</span>
+                </div>
+                <div class="lifestyle-picks-grid">
+                  <div class="product-mini-card">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop15.png" class="mini-card-img" alt="P1">
+                      <div class="mini-card-heart">♥</div>
+                    </div>
+                    <div class="mini-card-name">Nike Offcourt</div>
+                    <div class="mini-card-price">Rp609.000</div>
+                  </div>
+                  <div class="product-mini-card">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop16.png" class="mini-card-img" alt="P2">
+                      <div class="mini-card-heart">♥</div>
+                    </div>
+                    <div class="mini-card-name">Nike Calm 2.0</div>
+                    <div class="mini-card-price">Rp709.000</div>
+                  </div>
+                  <div class="product-mini-card">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop14.png" class="mini-card-img" alt="P3">
+                      <div class="mini-card-heart">♥</div>
+                    </div>
+                    <div class="mini-card-name">Club Fleece</div>
+                    <div class="mini-card-price">Rp919.200 <span class="mini-card-original">1.149k</span></div>
+                  </div>
+                  <div class="product-mini-card">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop4.png" class="mini-card-img" alt="P4">
+                      <div class="mini-card-heart">♥</div>
+                    </div>
+                    <div class="mini-card-name">Air Max Plus</div>
+                    <div class="mini-card-price">Rp2.389.000</div>
+                  </div>
+                  <div class="product-mini-card">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop17.png" class="mini-card-img" alt="P5">
+                      <div class="mini-card-heart">♥</div>
+                    </div>
+                    <div class="mini-card-name">ReactX Rejuven8</div>
+                    <div class="mini-card-price">Rp889.000</div>
+                  </div>
+                  <div class="product-mini-card">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop12.png" class="mini-card-img" alt="P6">
+                      <div class="mini-card-heart">♥</div>
+                    </div>
+                    <div class="mini-card-name">UA HOVR Elite</div>
+                    <div class="mini-card-price">Rp1.499.000</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 14. SEARCH SCREEN -->
+              <div class="screen" id="screen-search">
+                <div class="search-input-bar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" class="search-input-field" id="search-input-box" placeholder="Cari sepatu, pakaian, atau brand...">
+                  <button class="search-clear-btn" id="search-clear-btn">✕</button>
+                </div>
+
+                <div style="font-size: 13px; font-weight: 700; color: #111111; margin-bottom: 10px;">Pencarian Populer</div>
+                <div class="chips-row">
+                  <div class="search-chip">Air Jordan</div>
+                  <div class="search-chip">Kobe Protro</div>
+                  <div class="search-chip">Predator Elite</div>
+                  <div class="search-chip">Curry 11</div>
+                  <div class="search-chip">Running</div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                  <span style="font-size: 13px; font-weight: 700; color: #111111;">Hasil Katalog</span>
+                  <span style="font-size: 11px; color: #71717a;" id="search-results-count">6 Produk Ditemukan</span>
+                </div>
+
+                <div class="lifestyle-picks-grid" style="padding:0;">
+                  <div class="product-mini-card search-result-card" data-name="Air Jordan 4 Toro" data-cat="Basketball Jordan">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/bag1.png" class="mini-card-img" alt="AJ4">
+                    </div>
+                    <div class="mini-card-name">Air Jordan 4 'Toro'</div>
+                    <div class="mini-card-price">Rp3.329.000</div>
+                  </div>
+                  <div class="product-mini-card search-result-card" data-name="Nike Air Max Plus" data-cat="Running Shoes">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop4.png" class="mini-card-img" alt="Air Max">
+                    </div>
+                    <div class="mini-card-name">Air Max Plus</div>
+                    <div class="mini-card-price">Rp2.389.000</div>
+                  </div>
+                  <div class="product-mini-card search-result-card" data-name="Nike Offcourt Adjust" data-cat="Slide Sandals">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/shop15.png" class="mini-card-img" alt="Offcourt">
+                    </div>
+                    <div class="mini-card-name">Nike Offcourt</div>
+                    <div class="mini-card-price">Rp609.000</div>
+                  </div>
+                  <div class="product-mini-card search-result-card" data-name="Kobe Protro 8" data-cat="Sheath Kobe Basketball">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/homebg2.png" class="mini-card-img" alt="Kobe">
+                    </div>
+                    <div class="mini-card-name">Kobe 8 Protro</div>
+                    <div class="mini-card-price">Rp3.499.000</div>
+                  </div>
+                  <div class="product-mini-card search-result-card" data-name="Predator Elite" data-cat="Adidas Football Cleat">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/homebg3.png" class="mini-card-img" alt="Predator">
+                    </div>
+                    <div class="mini-card-name">Predator Elite</div>
+                    <div class="mini-card-price">Rp3.199.000</div>
+                  </div>
+                  <div class="product-mini-card search-result-card" data-name="Curry Flow 11" data-cat="Under Armour Basketball">
+                    <div class="mini-card-img-wrap">
+                      <img src="assets/images/homebg5.png" class="mini-card-img" alt="Curry">
+                    </div>
+                    <div class="mini-card-name">Curry Flow 11</div>
+                    <div class="mini-card-price">Rp2.299.000</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 15. PRODUCT DETAIL SCREEN -->
+              <div class="screen" id="screen-detail">
+                <div class="detail-nav-bar">
+                  <button class="detail-round-btn" onclick="navigateTo(state.previousScreen || 'shop')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  </button>
+                  <button class="detail-round-btn" onclick="showToast('Tersimpan di Wishlist Favorit')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
+                </div>
+
+                <div class="detail-gallery-wrap">
+                  <img src="assets/images/bag1.png" class="detail-gallery-img" id="detail-main-img" alt="Detail Gallery">
+                </div>
+
+                <div class="detail-content-wrap">
+                  <div class="detail-cat-tag" id="detail-cat">Men's Basketball Shoes</div>
+                  <h1 class="detail-product-title" id="detail-title">Air Jordan 4 'Toro'</h1>
+                  <div class="detail-price-text" id="detail-price">Rp3.329.000</div>
+
+                  <div class="size-selector-header">
+                    <span style="font-size: 13px; font-weight: 700;">Pilih Ukuran</span>
+                    <span class="size-guide-link">Panduan Ukuran</span>
+                  </div>
+                  <div class="size-chips-grid">
+                    <div class="size-chip-box">EU 40</div>
+                    <div class="size-chip-box">EU 41</div>
+                    <div class="size-chip-box">EU 42</div>
+                    <div class="size-chip-box selected">EU 42.5</div>
+                    <div class="size-chip-box">EU 43</div>
+                    <div class="size-chip-box">EU 44</div>
+                    <div class="size-chip-box">EU 45</div>
+                    <div class="size-chip-box">EU 46</div>
+                  </div>
+
+                  <button class="btn-add-to-bag" id="btn-add-to-bag">Tambah ke Keranjang (Bag)</button>
+
+                  <div class="accordion-item open">
+                    <div class="accordion-header">
+                      <span>Deskripsi & Cerita Produk</span>
+                      <span>▼</span>
+                    </div>
+                    <div class="accordion-body">
+                      Siluet legendaris Air Jordan 4 'Toro' hadir kembali dengan nuansa merah menyala yang berani. Dibuat dengan material nubuck premium dan bantalan Air-Sole untuk kenyamanan maksimal saat beraksi di lapangan maupun jalanan kota.
+                    </div>
+                  </div>
+
+                  <div class="accordion-item">
+                    <div class="accordion-header">
+                      <span>Pengiriman & Pengembalian</span>
+                      <span>▼</span>
+                    </div>
+                    <div class="accordion-body">
+                      Gratis ongkir untuk seluruh member ShopSey pada transaksi di atas Rp1.500.000. Kebijakan pengembalian produk 30 hari tanpa ribet.
+                    </div>
+                  </div>
+
+                  <div class="accordion-item">
+                    <div class="accordion-header">
+                      <span>Ulasan Member (4.9 ★★★★★)</span>
+                      <span>▼</span>
+                    </div>
+                    <div class="accordion-body">
+                      "Kualitas jahitan sangat rapi, warna merahnya sangat deep dan berkarakter. Nyaman dipakai seharian!" — <i>Verified Athlete</i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 16. BAG / CART SCREEN -->
+              <div class="screen" id="screen-bag">
+                <h1 class="bag-title">Bag</h1>
+
+                <div class="shipping-progress-banner">
+                  <div class="shipping-progress-text">🎉 Anda Mendapatkan Gratis Ongkir!</div>
+                  <div class="shipping-bar-track">
+                    <div class="shipping-bar-fill"></div>
+                  </div>
+                </div>
+
+                <div class="bag-item-card">
+                  <img src="assets/images/bag1.png" class="bag-item-thumb" alt="Bag Item">
+                  <div class="bag-item-details">
+                    <div class="bag-item-name">Air Jordan 4 'Toro'</div>
+                    <div class="bag-item-sub">Men's Shoes • Varsity Red</div>
+                    <div class="bag-item-sub">Ukuran: EU 42.5</div>
+                    <div class="bag-item-price">Rp3.329.000</div>
+                    <div class="bag-qty-row">
+                      <div class="qty-counter-pill">
+                        <button class="qty-btn" id="btn-qty-minus">-</button>
+                        <span id="bag-qty-val">1</span>
+                        <button class="qty-btn" id="btn-qty-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="promo-code-box">
+                  <input type="text" class="promo-input" id="promo-input-field" placeholder="Masukkan Voucher (Contoh: SHOPSEY20)">
+                  <button class="promo-apply-btn" id="btn-apply-promo">Gunakan</button>
+                </div>
+
+                <div class="cost-breakdown-list">
+                  <div class="cost-row">
+                    <span>Subtotal</span>
+                    <span id="bag-subtotal">Rp3.329.000</span>
+                  </div>
+                  <div class="cost-row">
+                    <span>Pengiriman & Penanganan</span>
+                    <span style="color: #16a34a; font-weight: 700;">Gratis</span>
+                  </div>
+                  <div class="cost-row">
+                    <span>Estimasi Pajak (PPN 11%)</span>
+                    <span id="bag-tax">Rp366.190</span>
+                  </div>
+                  <div class="cost-row total-row">
+                    <span>Total Pembayaran</span>
+                    <span id="bag-total">Rp3.695.190</span>
+                  </div>
+                </div>
+
+                <button class="btn-checkout" id="btn-checkout-action">Checkout Sekarang</button>
+              </div>
+
+              <!-- 17. PROFILE SCREEN -->
+              <div class="screen" id="screen-profile">
+                <div class="profile-header-wrap">
+                  <div class="profile-avatar-circle">RA</div>
+                  <div class="profile-name">R A</div>
+                  <div class="profile-location">Yogyakarta • Lifestyle Member</div>
+                  <button class="profile-edit-btn">Edit Profil</button>
+                </div>
+
+                <div class="profile-action-bar">
+                  <div class="profile-action-col">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+                    <span class="profile-action-label">Pesanan</span>
+                  </div>
+                  <div class="profile-action-col">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span class="profile-action-label">Akses</span>
+                  </div>
+                  <div class="profile-action-col">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span class="profile-action-label">Favorit</span>
+                  </div>
+                  <div class="profile-action-col">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span class="profile-action-label">Pengaturan</span>
+                  </div>
+                </div>
+
+                <div class="profile-menu-list">
+                  <div class="profile-menu-item">
+                    <span>Kotak Masuk (Inbox)</span>
+                    <span>›</span>
+                  </div>
+                  <div class="profile-menu-item">
+                    <span>Manfaat Anggota ShopSey</span>
+                    <span>›</span>
+                  </div>
+                  <div class="profile-menu-item">
+                    <span>Acara & Pengalaman Member</span>
+                    <span>›</span>
+                  </div>
+                </div>
+
+                <div class="following-section">
+                  <div class="following-title">Mengikuti Atlet (3)</div>
+                  <div class="athletes-row">
+                    <img src="assets/images/homebg1.png" class="athlete-thumb" alt="A1" title="Cristiano Ronaldo">
+                    <img src="assets/images/homebg2.png" class="athlete-thumb" alt="A2" title="Kobe Bryant">
+                    <img src="assets/images/homebg5.png" class="athlete-thumb" alt="A3" title="Stephen Curry">
+                  </div>
+                </div>
+
+                <button class="auth-btn-outline" style="margin-top: 10px;" onclick="navigateTo('landing')">Keluar (Sign Out)</button>
+                <div class="member-since-footer">Anggota ShopSey Sejak Agustus 2026</div>
+              </div>
+
+            </div> <!-- /screen-viewport -->
+
+            <!-- FLOATING 3D BOTTOM NAVIGATION BAR (INSIDE PHONE) -->
+            <nav class="floating-bottom-nav dark-style" id="floating-bottom-nav">
+              <button class="nav-tab-item active" data-tab="0">
+                <span class="nav-tab-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                </span>
+                <span class="nav-tab-label">Home</span>
+              </button>
+              <button class="nav-tab-item" data-tab="1">
+                <span class="nav-tab-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                </span>
+                <span class="nav-tab-label">Shop</span>
+              </button>
+              <button class="nav-tab-item" data-tab="2">
+                <span class="nav-tab-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </span>
+                <span class="nav-tab-label">Search</span>
+              </button>
+              <button class="nav-tab-item" data-tab="3">
+                <span class="nav-tab-icon" style="position:relative;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                  <span class="nav-badge-pill" id="nav-bag-badge">1</span>
+                </span>
+                <span class="nav-tab-label">Bag</span>
+              </button>
+              <button class="nav-tab-item" data-tab="4">
+                <span class="nav-tab-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <span class="nav-tab-label">Profile</span>
+              </button>
+            </nav>
+
+            <!-- Bottom Home Indicator Gesture Bar -->
+            <div class="home-indicator"></div>
+
+          </div> <!-- /phone-screen -->
+        </div> <!-- /phone-mockup -->
+      </section>
+
+      <!-- Right Sidebar: Technical Inspector & Guided Flow -->
+      <aside class="inspector-panel">
+        <span class="inspector-tag" id="inspect-tag">COMPOSE COMPONENT</span>
+        <h2 class="inspector-title" id="inspect-title">Splash Screen</h2>
+        <p class="inspector-desc" id="inspect-desc">Layar awal pembuka dengan logo ShopSey bernuansa hitam elegan, dilengkapi efek breathing/scale animasi serta transisi otomatis ke Landing Screen.</p>
+
+        <div class="specs-list">
+          <div class="spec-item">
+            <span class="spec-label">File Kotlin</span>
+            <span class="spec-val" id="inspect-comp">SplashScreen.kt</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Skema Tema</span>
+            <span class="spec-val" id="inspect-theme">Dark Cinematic</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Toolkit UI</span>
+            <span class="spec-val">Jetpack Compose M3</span>
+          </div>
+        </div>
+
+        <div class="quick-test-box">
+          <div class="quick-test-title">Alur Navigasi Rekomendasi</div>
+          <button class="guide-step-btn" onclick="navigateTo('landing')">
+            <span>1. Alur Masuk (Sign In + OTP)</span>
+            <span>➔</span>
+          </button>
+          <button class="guide-step-btn" onclick="navigateTo('home')">
+            <span>2. Home Brand Snap Pager</span>
+            <span>➔</span>
+          </button>
+          <button class="guide-step-btn" onclick="navigateTo('shop')">
+            <span>3. Katalog Mozaik & Bento Shop</span>
+            <span>➔</span>
+          </button>
+          <button class="guide-step-btn" onclick="navigateTo('detail')">
+            <span>4. Galeri Detail Sepatu & Ukuran</span>
+            <span>➔</span>
+          </button>
+          <button class="guide-step-btn" onclick="navigateTo('bag')">
+            <span>5. Keranjang & Simulasi Checkout</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </aside>
+
+    </div> <!-- /simulator-layout -->
+
+
+    <!-- ====================================================================
+         VIEW 2: All Screens Overview (Gallery Mode)
+         ==================================================================== -->
+    <div class="overview-grid-layout" id="view-overview">
+      <div class="overview-header">
+        <h2 class="overview-heading">Koleksi Seluruh Halaman Aplikasi ShopSey</h2>
+        <p class="overview-sub">Klik pada salah satu halaman di bawah ini untuk membuka dan berinteraksi langsung pada simulator smartphone.</p>
+      </div>
+
+      <div class="screens-mosaic-grid">
+
+        <!-- Card 1: Splash -->
+        <div class="mosaic-screen-card" data-target="splash">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/splash_screen_page.png" alt="Splash Screen">
+          </div>
+          <div class="mosaic-card-title">1. Splash Screen</div>
+          <div class="mosaic-card-desc">Layar pembuka minimalis dengan logo putih dan latar hitam pekat.</div>
+        </div>
+
+        <!-- Card 2: Landing -->
+        <div class="mosaic-screen-card" data-target="landing">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/landing1.png" alt="Landing Screen">
+          </div>
+          <div class="mosaic-card-title">2. Landing Screen</div>
+          <div class="mosaic-card-desc">Carousel model olahraga dinamis dengan transisi crossfade 3 detik.</div>
+        </div>
+
+        <!-- Card 3: Welcome -->
+        <div class="mosaic-screen-card" data-target="welcome">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/welcome1.png" alt="Welcome Screen">
+          </div>
+          <div class="mosaic-card-title">3. Welcome Screen</div>
+          <div class="mosaic-card-desc">Kolase 15 foto diagonal 30 derajat dengan sapaan member personal.</div>
+        </div>
+
+        <!-- Card 4: Home -->
+        <div class="mosaic-screen-card" data-target="home">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/homebg1.png" alt="Home Screen">
+          </div>
+          <div class="mosaic-card-title">4. Home Snap Pager</div>
+          <div class="mosaic-card-desc">Tampilan sinematik 6 brand utama dengan auto-scroll timer bar.</div>
+        </div>
+
+        <!-- Card 5: Shop -->
+        <div class="mosaic-screen-card" data-target="shop">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/kategori_page.png" alt="Shop Screen">
+          </div>
+          <div class="mosaic-card-title">5. Shop Catalog & Bento</div>
+          <div class="mosaic-card-desc">Mozaik kategori 2-kolom, Hero banner slider, dan grid produk lifestyle.</div>
+        </div>
+
+        <!-- Card 6: Detail -->
+        <div class="mosaic-screen-card" data-target="detail">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/detail_page.png" alt="Product Detail">
+          </div>
+          <div class="mosaic-card-title">6. Detail Produk & Ukuran</div>
+          <div class="mosaic-card-desc">Edge-to-edge galeri multi-sudut, pemilih ukuran EU, dan accordion ulasan.</div>
+        </div>
+
+        <!-- Card 7: Bag -->
+        <div class="mosaic-screen-card" data-target="bag">
+          <div class="mosaic-img-frame">
+            <img src="assets/images/cart_page.png" alt="Bag Screen">
+          </div>
+          <div class="mosaic-card-title">7. Keranjang Belanja (Bag)</div>
+          <div class="mosaic-card-desc">Rincian biaya, kupon promo diskon, indikator gratis ongkir, dan checkout.</div>
+        </div>
+
+        <!-- Card 8: Profile -->
+        <div class="mosaic-screen-card" data-target="profile">
+          <div class="mosaic-img-frame" style="background:#ffffff; display:flex; align-items:center; justify-content:center;">
+            <div style="text-align:center; padding: 20px;">
+              <div style="width:70px; height:70px; border-radius:50%; background:#e2e2e6; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; color:#111;">RA</div>
+              <div style="font-size:16px; font-weight:800; color:#111;">R A</div>
+              <div style="font-size:12px; color:#71717a;">Yogyakarta • Member</div>
+            </div>
+          </div>
+          <div class="mosaic-card-title">8. Profil Member</div>
+          <div class="mosaic-card-desc">Pusat akun pengguna, status keanggotaan, dan daftar atlet favorit.</div>
+        </div>
+
+      </div>
+    </div> <!-- /overview-grid-layout -->
+
+
+    <!-- ====================================================================
+         VIEW 3: Architecture & Technical Documentation Mode
+         ==================================================================== -->
+    <div class="docs-view-layout" id="view-docs">
+      <div class="doc-section-card">
+        <h2 class="doc-heading">🏗️ Arsitektur Sistem Mobile (ShopSey)</h2>
+        <p class="doc-p">
+          Aplikasi mobile <strong>ShopSey</strong> dibangun menggunakan pola arsitektur modern <strong>Single-Activity Architecture</strong> berbasis <strong>Jetpack Compose</strong> dan <strong>Material 3</strong>. Pola ini memisahkan antarmuka pengguna (UI Layer) dari pengelolaan state data, menghasilkan kode yang bersih, reaktif, dan mudah dirawat.
+        </p>
+
+        <div class="tech-badges-row">
+          <span class="tech-tag">Android Studio Koala / Ladybug</span>
+          <span class="tech-tag">Kotlin 2.0</span>
+          <span class="tech-tag">Jetpack Compose M3</span>
+          <span class="tech-tag">Navigation Compose</span>
+          <span class="tech-tag">StateFlow & MutableState</span>
+        </div>
+      </div>
+
+      <div class="doc-section-card">
+        <h2 class="doc-heading">🎨 Filosofi Desain & Mutasi Tema Dinamis</h2>
+        <p class="doc-p">
+          ShopSey mengusung gaya desain <strong>Minimalis dan Elegan</strong> monokromatik terinspirasi dari aplikasi e-commerce kelas dunia seperti Nike dan Farfetch:
+        </p>
+        <ul style="padding-left: 20px; font-size: 14px; color: #a1a1aa; line-height: 1.8; margin-bottom: 16px;">
+          <li><strong>Home Screen:</strong> Menggunakan tema gelap sinematik (<em>Dark Mode</em>) dengan Vertical Snap Pager untuk menonjolkan visual brand secara dramatis.</li>
+          <li><strong>Shop, Search, Bag, & Profile:</strong> Menggunakan tema terang bersih (<em>Light Mode</em>) untuk kenyamanan membaca katalog, filter, dan transaksi belanja.</li>
+          <li><strong>Floating Dynamic Navbar:</strong> Mengalami mutasi visual mulus (<em>Smooth Crossfade</em>) antara Dark 3D Glassmorphism dan White Elevated Shadow.</li>
+          <li><strong>Edge-to-Edge Experience:</strong> Penanganan insets (status bar & navigation bar) yang sempurna menggunakan <code>statusBarsPadding()</code> dan <code>navigationBarsPadding()</code>.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section-card">
+        <h2 class="doc-heading">📂 Dokumen Laporan Pertanggungjawaban (LPJ)</h2>
+        <p class="doc-p">
+          Seluruh detail implementasi kode, struktur berkas Kotlin, cuplikan antarmuka, hingga analisis pengujian UI/UX telah didokumentasikan secara komprehensif dalam file:
+        </p>
+        <div style="background: rgba(0,0,0,0.3); padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; color: #ffffff; font-size: 14px;">LPJ_Tugas_Akhir_ShopSey_Android_Studio.docx</div>
+            <div style="font-size: 12px; color: #71717a;">Ukuran: ~1.1 MB • Format: Microsoft Word (.docx)</div>
+          </div>
+          <a href="../LPJ_Tugas_Akhir_ShopSey_Android_Studio.docx" download class="btn-primary" style="padding: 8px 16px; font-size: 12px; text-decoration: none; border-radius: 999px;">Unduh Berkas</a>
+        </div>
+      </div>
+    </div> <!-- /docs-view-layout -->
+
+  </main>
+
+  <!-- Global Modal Popup (Checkout Confirmation) -->
+  <div class="modal-overlay" id="global-modal">
+    <div class="modal-card">
+      <div class="modal-icon-badge">✓</div>
+      <h3 class="modal-title" id="modal-title">Pesanan Berhasil!</h3>
+      <p class="modal-desc" id="modal-desc">Terima kasih telah berbelanja di ShopSey! Konfirmasi pesanan Anda sedang diproses.</p>
+      <button class="btn-landing-primary" style="background:#111111; color:#ffffff;" onclick="closeModal()">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
+

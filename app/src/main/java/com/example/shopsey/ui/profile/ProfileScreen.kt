@@ -51,7 +51,7 @@ import com.example.shopsey.R
  * Komponen:
  * 1. Header Profile: Avatar bulat besar, nama "R A", lokasi "Yogyakarta", subtitle "Lifestyle", tombol "Edit Profil"
  * 2. Bar Aksi 4 Kolom: Pesanan, Akses, Favorit, Pengaturan (dengan garis pembatas vertikal di antaranya)
- * 3. Menu List: Kotak Masuk, Manfaat Anggota Nike Anda, Acara (dengan chevron > dan garis pembatas)
+ * 3. Menu List: Kotak Masuk, Manfaat Anggota Shopsey Anda, Acara (dengan chevron > dan garis pembatas)
  * 4. Section "Mengikuti (3)": Header dengan tombol Edit dan 3 thumbnail foto profil atlet
  * 5. Footer: "Anggota Sejak Agustus 2026"
  */
@@ -226,9 +226,9 @@ fun ProfileScreen(
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
 
-                // Item 2: Manfaat Anggota Nike Anda
+                // Item 2: Manfaat Anggota Shopsey Anda
                 ProfileNavRow(
-                    title = "Manfaat Anggota Nike Anda",
+                    title = "Manfaat Anggota Shopsey Anda",
                     subtitle = "Tersedia 2",
                     onClick = { }
                 )
